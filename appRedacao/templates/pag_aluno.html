@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página do Aluno</title>
+</head>
+<body>
+    <h1>Página do Aluno</h1>
+
+    <!-- Formulário para enviar a redação -->
+    <form method="post" action="">
+        {% csrf_token %}
+        <label for="redacao">Escreva sua redação:</label><br>
+        <textarea id="redacao" name="redacao" rows="10" cols="50" required></textarea>
+        <br>
+        <button type="submit">Enviar Redação</button>
+    </form>
+
+    <br>
+
+    <!-- Opção de ver redações anteriores -->
+    <a href="">Ver Redações Anteriores</a>
+
+    <br>
+
+<!-- Formulário para logout -->
+<!-- Formulário para logout -->
+<form method="post" action="{% url 'logout_aluno' %}">
+    {% csrf_token %}
+    <button type="submit">Logout</button>
+</form>
+
+
+
+</body>
+</html>
