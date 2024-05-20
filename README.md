@@ -2,7 +2,7 @@ Sejam bem-vindos!
 
 Aqui está o nosso projeto. 
 
-Façam commits e alteraçõoes necessárias!
+Façam commits e alterações necessárias!
 
 
 
