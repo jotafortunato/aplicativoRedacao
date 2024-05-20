@@ -18,8 +18,8 @@ class AlunoForm(forms.ModelForm):
 
 
 class AlunoLoginForm(forms.Form):
-    email = forms.EmailField(label='E-mail')
-    senha = forms.CharField(label='Senha', widget=forms.PasswordInput)
+    email = forms.EmailField(label='E-mail', widget=forms.EmailInput(attrs={'placeholder': 'Digite seu e-mail'}))
+    senha = forms.CharField(label='Senha', widget=forms.PasswordInput(attrs={'placeholder': 'Digite sua senha'}))
 
     def clean(self):
         cleaned_data = super().clean()

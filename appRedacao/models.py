@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.hashers import make_password
-
-# Create your models here.
+from django.contrib.auth.hashers import check_password
 
 class Aluno(models.Model):
     id = models.AutoField(primary_key=True)
@@ -13,15 +12,18 @@ class Aluno(models.Model):
     endereco = models.CharField(max_length=200)
     curso = models.CharField(max_length=100, blank=True, null=True)
 
-def save(self, *args, **kwargs):
-    # Antes de salvar, criptografa a senha se ela não estiver criptografada
-    if not self.senha.startswith('pbkdf2_sha256$'):
-        self.senha = make_password(self.senha)
-    super(Aluno, self).save(*args, **kwargs)
-
+    def save(self, *args, **kwargs):
+        # Antes de salvar, criptografa a senha se ela não estiver criptografada
+        if not self.senha.startswith('pbkdf2_sha256$'):
+            self.senha = make_password(self.senha)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.nome_aluno
+    
+    def check_password(self, raw_password):
+        # Verifica se a senha fornecida corresponde à senha armazenada no banco de dados
+        return check_password(raw_password, self.senha)
 
     class Meta:
         verbose_name_plural = "Alunos"

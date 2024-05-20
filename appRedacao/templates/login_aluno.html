@@ -1,21 +1,159 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login de Aluno</title>
-</head>
-<body>
-    <h1>Login de Aluno</h1>
+{% load static %}
 
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Login</button>
-    </form>
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Escrevendo na Quarentena</title>
+  <link rel="icon" href='{% static 'assets/img/logo.ico' %}' alt="Minha Imagem">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .header {
+      padding: 20px;
+      text-align: center;
+      background-color: #343a40; /* Cor de fundo cinza escuro para footer */
+      width: auto; /* Largura automática para o footer */
+      left: 0; /* Alinha o footer à esquerda */
+      right: 0; /* Alinha o footer à direita */
+    }
+
+    body {
+      background-color: #550a8a; /* Cor de fundo roxa */
+      color: #ffffff; /* Cor do texto */
+      margin: 0; /* Remova as margens padrão */
+    }
+
     
-    {% if error_message %}
-        <p>{{ error_message }}</p>
-    {% endif %}
+    .header {
+      padding: 25px;
+      text-align: left; /* Alinhar o texto à esquerda */
+      background-color: #343a40; /* Cor de fundo cinza escuro para footer */
+      width: auto; /* Largura automática para o header */
+      left: 0; /* Alinha o header à esquerda */
+      right: 0; /* Alinha o header à direita */
+    }
+    
+    .header img {
+      width: 50px; /* Tamanho reduzido da logo */
+      height: auto;
+      border-radius: 50%; /* Torna a logo arredondada */
+      margin-right: 10px; /* Adiciona margem à direita da logo */
+    }
+    
+    .text1, .text2 {
+      display: inline-block; /* Permite que os textos fiquem lado a lado */
+    }
+    
+
+    .content {
+      padding-top: 50px; /* Ajusta o espaço entre o cabeçalho e o formulário */
+      text-align: center; /* Centraliza o conteúdo */
+    }
+    
+    .cadastro {
+      display: inline-block; /* Permite que o formulário seja centralizado */
+      margin-top: 50px; /* Ajusta a distância do topo */
+    }
+    
+    .cadastro form {
+      width: 300px; /* Define a largura do formulário */
+      margin: 0 auto; /* Centraliza o formulário na página */
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+
+    .cadastro input[type="email"],
+    .cadastro input[type="password"] {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .cadastro button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: none;
+      background-color: #007bff;
+      color: #ffffff;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .cadastro button:hover {
+      background-color: #0056b3;
+    }
+
+    .footer {
+      padding: 20px;
+      text-align: center;
+      background-color: #343a40; /* Cor de fundo cinza escuro para footer */
+      width: auto; /* Largura automática para o footer */
+      position: fixed; /* Mantém o footer fixo na parte inferior */
+      bottom: 0; /* Coloca o footer no fundo da página */
+      left: 0; /* Alinha o footer à esquerda */
+      right: 0; /* Alinha o footer à direita */
+    }
+
+    .footer a {
+      color: #ffffff; /* Cor do link */
+      margin-right: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+    <img src='{% static 'assets/img/logo.png' %}' id="logo" alt="Logo">
+    <div class="text1">Login</div>
+    <div class="text2">do aluno</div>
+  </div>
+
+  <div class="container">
+
+
+    <div class="content">
+      <div class="cadastro">
+        {% if error_messages %}
+  <div class="alert alert-danger" role="alert">
+    {% for message in error_messages %}
+      {{ message }}
+    {% endfor %}
+  </div>
+{% endif %}
+        <form method="POST" class="bg-dark p-4 rounded">
+
+          {% csrf_token %}
+          {{ form.as_p }}
+
+          <button type="submit">Login</button>
+
+        </form>
+    </div>
+    </div>
+    
+
+    <div class="footer">
+
+      <div>
+        <a href="#"><i class="fab fa-instagram"></i></a> <!-- Ícone do Instagram -->
+        &copy; 2024 Todos os direitos reservados. <!-- Declaração de direitos autorais -->
+      </div>
+    </div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>

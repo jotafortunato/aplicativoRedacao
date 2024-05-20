@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -9,45 +11,47 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Adicione link para a biblioteca Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="icon" href="/static/logo.png">
+    <link rel="icon" href='{% static 'assets/img/logo.png' %}'>
     
     <style>
-        /* Estilo de fundo lilás claro */
         body {
-            background-color: #f3e5f5; /* Lilás claro */
+            background-color: #f3e5f5;
         }
 
         /* Estilo para o header */
         .navbar {
-            background-color: #5D02B7; /* Roxo */
+            background-color: #343a40; /* Cinza escuro */
+            padding: 20px;
+        }
+
+        /* Estilo para o logo */
+        .navbar-brand img {
+            width: 50px; /* Tamanho reduzido da logo */
+            height: auto;
+            border-radius: 50%; /* Torna a logo arredondada */
+            margin-right: 10px; /* Adiciona margem à direita da logo */
         }
 
         /* Estilo para o texto do header */
-        .navbar-brand,
         .navbar-nav .nav-link {
-            color: #ffffff; /* Branco */
-            font-size: 18px;
+            color: #ffffff;
+            font-size: 20px;
         }
 
-        /* Estilo para o link ativo do header */
-        .navbar-nav .nav-link.active {
-            font-weight: bold;
-        }
-
-        /* Estilo para o botão de menu do header */
-        .navbar-toggler-icon {
-            background-color: #ffffff; /* Branco */
+        /* Estilo para o botão de menu */
+        .navbar-toggler {
+            background-color: #ffffff;
         }
 
         /* Estilo para o texto do dropdown do header */
         .dropdown-menu a {
-            color: #212529; /* Preto */
+            color: #212529;
         }
 
         /* Estilo para o hover do dropdown do header */
         .dropdown-menu a:hover {
-            background-color: #ffffff; /* Branco */
-            color: #5D02B7; /* Roxo */
+            background-color: #ffffff;
+            color: #5D02B7;
         }
 
         /* Estilo para os botões de login */
@@ -60,54 +64,53 @@
 
         /* Estilo para os links de Sou Aluno e Sou Professor */
         .btn-aluno {
-            background-color: #2196F3; /* Azul */
-            color: #ffffff; /* Branco */
+            background-color: #2196F3;
+            color: #ffffff;
         }
 
         .btn-professor {
-            background-color: #9E9E9E; /* Cinza */
-            color: #ffffff; /* Branco */
+            background-color: #9E9E9E;
+            color: #ffffff;
         }
 
-        /* Estilo para o footer */
-        footer {
-            background-color: #5D02B7; /* Roxo */
-            color: #ffffff; /* Branco */
-            padding: 20px 0;
+        .footer {
+            padding: 10px;
             text-align: center;
-            width: 100%;
-            position: fixed; /* Alteração da propriedade position */
-            bottom: 0;
-        }
+            background-color: #343a40; /* Cor de fundo cinza escuro para footer */
+            width: auto; /* Largura automática para o footer */
+            position: fixed; /* Mantém o footer fixo na parte inferior */
+            bottom: 0; /* Coloca o footer no fundo da página */
+            left: 0; /* Alinha o footer à esquerda */
+            right: 0; /* Alinha o footer à direita */
+          }
+
+        .footer a {
+            color: #ffffff; /* Cor do link */
+            margin-right: 10px;
+          }
+      
 
 
-
-        /* Estilo para o ícone do Instagram no footer */
-        .instagram-icon {
-            color: #ffffff; /* Branco */
-            font-size: 24px;
-            margin-right: 5px;
-        }
     </style>
 </head>
 <body>
     <!-- Header -->
     <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand" href="#"><img src="/static/logo.png" width=50px height=50px></a>
+        <a class="navbar-brand" href="#"><img src='{% static 'assets/img/logo.png' %}' ></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>
         </button>
         <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="menuDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span style="font-size: 20px;">Login/Cadastro</span>
+                    <a class="nav-link dropdown-toggle text-white" href="#" id="menuDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span style="font-size: 20px;">Menu</span>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="menuDropdown">
-                        <a class="dropdown-item" href="/cadastroAluno">Cadastro Aluno</a>
-                        <a class="dropdown-item" href="/cadastroProfessor">Cadastro Professor</a>
+                        <!--- <a class="dropdown-item" href="/cadastroAluno">Cadastro Aluno</a> -->
+                        <!--- <a class="dropdown-item" href="/cadastroProfessor">Cadastro Professor</a> -->
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="/loginAluno">Login Aluno</a>
+                        <a class="dropdown-item" href="{% url 'login_aluno' %}">Login Aluno</a>
                         <a class="dropdown-item" href="/loginProfessor">Login Professor</a>
                     </div>
                 </li>
@@ -140,7 +143,7 @@
         <!-- Botões de Sou Aluno e Sou Professor -->
         <div class="row mb-4">
             <div class="col-md-6">
-                <a href="/loginAluno" class="btn btn-aluno btn-lg btn-block">Sou Aluno</a>
+                <a href="{% url 'login_aluno' %}" class="btn btn-aluno btn-lg btn-block">Sou Aluno</a>
             </div>
             <div class="col-md-6">
                 <a href="/loginProfessor" class="btn btn-professor btn-lg btn-block">Sou Professor</a>
@@ -238,23 +241,23 @@
         </div>
     </div>
 
+
     <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                    &copy; 2024 Equipe de Desenvolvimento LaSalle
-                </div>
-                <div class="col">
-                    <a href="#"><i class="fab fa-instagram instagram-icon"></i></a>
-                </div>
-            </div>
+    <div class="footer">
+
+        <div class='text-white'>
+          &copy; 2024 Todos os direitos reservados. <!-- Declaração de direitos autorais -->
         </div>
-    </footer>
+    </div>
+
 
     <!-- Adicione link para o arquivo JavaScript do Bootstrap -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
+
+
+
 </html>

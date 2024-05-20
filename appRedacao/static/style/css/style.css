@@ -1,0 +1,234 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body{
+    height: 610px;
+    overflow-y: hidden;
+  }
+  
+  .container{
+    height: 610px;
+  }
+  
+  .header{
+    height: 81px;
+    width: 100%;
+    padding: 0px;
+    background-color: #550a8a;
+  }
+  
+  .text1{
+    position:absolute;
+    color: #B8860B;
+    font-family: Verdana;
+    font-style: bold;
+    left: 143px;
+    top: 20px;
+  }
+  
+  .text2{
+    position:absolute;
+    color: #fafafa;
+    font-family: Verdana;
+    font-style: bold;
+    left: 143px;
+    top: 35px;
+  }
+  
+  #logo{
+    margin-top:10px;
+    margin-left:50px;
+    border-radius:40%;
+  }
+  
+  .content{
+    background-color: #801e78;
+    position: absolute;
+    top: 81px;
+    height: 100%;
+    width: 100%;
+  }
+  
+  .cadastro{
+    width: 300px;
+    height: 300px;
+    background-color: #D3D3D3;
+    position: relative;
+    margin-top: 20px;
+    left: 83vh;
+    border-radius: 40px;
+    box-shadow: 2px 2px 2px black, 2px -2px 4px 2px black;
+  }
+  
+  #logo2{
+    border-radius: 40px;
+    margin-top: 15px;
+    margin-left: 91vh;
+    box-shadow: 2px 2px 2px black, 2px -2px 4px 2px black;
+  }
+  
+  legend{
+    text-align: center;
+    font-size: 25pt;
+    color: #383838;
+    opacity: 0.8;
+  }
+  
+  #nome{
+    border-radius: 10px;
+    margin-left: 65px;
+    margin-top: 15px;
+    height: 30px;
+    padding: 2px;
+  }
+  
+  #id{
+    border-radius: 10px;
+    margin-left: 65px;
+    margin-top: 15px;
+    height: 30px;
+    padding: 2px;
+  }
+  
+  #senha{
+    border-radius: 10px;
+    margin-left: 65px;
+    margin-top: 15px;
+    height: 30px;
+    padding: 2px;
+  }
+  
+  #aluno{
+    position: absolute;
+    top: 65%;
+    left: 22%;
+    background-color:#491976;
+    color: whitesmoke;
+    font-size: 6pt;
+    width: 65px;
+    height: 32px;
+    border-radius: 8px;
+  }
+  
+  #professor{
+    position: absolute;
+    top: 65%;
+    left: 54%;
+    background-color:#8A2BE2;
+    color: whitesmoke;
+    font-size: 6pt;
+    width: 68px;
+    height: 32px;
+    border-radius: 8px;
+    transition: 0.8s;
+  }
+  
+  #professor:hover{
+    transition: 0.8s;
+    color: #170826;
+    box-shadow: 1px 1px 1px black;
+  }
+  
+  #entrar{
+    position: absolute;
+    top: 85%;
+    left: 15%;
+    background-color: #9B2592;
+    color: whitesmoke;
+    font-size: 8pt;
+    width: 75px;
+    height: 40px;
+    border-radius: 20px;
+    transition: 0.8s;
+  }
+  
+  #entrar:hover{
+    transition:0.8s;
+    background-color: #491976;
+  }
+  
+  #cadastrar{
+    position: absolute;
+    top: 85%;
+    left: 63%;
+    background-color: #9B2592;
+    color: whitesmoke;
+    font-size: 8pt;
+    width: 75px;
+    height: 40px;
+    border-radius: 20px;
+    transition:0.8s;
+  }
+  
+  #cadastrar:hover{
+    transition:0.8s;
+    background-color: #491976;
+  }
+  
+  .footer{
+    height: 81px;
+    width: 100%;
+    padding: 0px;
+    background-color: #550a8a;
+    position:absolute;
+    bottom:0%;
+  }
+  
+  .text3{
+    position:absolute;
+    color: #B8860B;
+    font-family: Verdana;
+    font-style: bold;
+    left: 143px;
+    top: 20px;
+  }
+  
+  .text4{
+    position:absolute;
+    color: #fafafa;
+    font-family: Verdana;
+    font-style: bold;
+    left: 143px;
+    top: 35px;
+  }
+  
+  @media (max-width: 720px) {
+  
+     body{
+       height: 300px;
+       width: 100%;
+     }
+    
+     .container{
+       height: 300px;
+       width: 100%;
+    }
+    
+     .content{
+       height: 500px;
+     }
+    
+     .cadastro{
+       left: 5vh;
+     }
+  
+     #professor{
+      position: absolute;
+      left: 27vh;
+     }
+    
+     #logo2{
+       width: 130px;
+       height: 70px;
+       margin-left: 18vh;
+     }
+  
+     .footer{
+       position: absolute;
+       bottom: 0%;
+     }
+    
+  }
