@@ -1,37 +1,259 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página do Aluno</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .header {
+            padding: 20px;
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+
+        .header img {
+            width: 50px;
+            height: auto;
+            border-radius: 50%;
+            margin-right: 10px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .header .text1,
+        .header .text2 {
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0;
+        }
+
+        .header .user-info {
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 10px;
+        }
+
+        .header .mode-toggle {
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #ffffff;
+        }
+
+        .footer {
+            padding: 20px;
+            text-align: center;
+            color: white;
+            background-color: #343a40;
+            width: auto;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .footer a {
+            color: #ffffff;
+            margin-right: 10px;
+        }
+
+        .sidebar {
+            height: 100%;
+            width: 200px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #343a40;
+            padding-top: 20px;
+            color: white;
+            transition: width 0.3s;
+        }
+
+        .sidebar a {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 18px;
+            color: white;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #575757;
+        }
+
+        .submenu {
+            display: none;
+            padding-left: 15px;
+        }
+
+        .submenu a {
+            font-size: 16px;
+        }
+
+        .container {
+            margin-left: 220px;
+            padding: 20px;
+        }
+
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        .dark-mode .header, .dark-mode .footer, .dark-mode .sidebar {
+            background-color: #1e1e1e;
+        }
+
+        .dark-mode .mode-toggle {
+            color: #f1c40f;
+        }
+
+        .dark-mode .sidebar a {
+            color: #ffffff;
+        }
+
+        .dark-mode .sidebar a:hover {
+            background-color: #575757;
+        }
+
+        .sidebar a.logout:hover {
+            background-color: red;
+        }
+        
+        .foto-redonda {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          object-fit: cover;
+          margin-left: 3%;
+      }
+
+      .user-info {
+        margin-left: 3%;
+    }
+    </style>
 </head>
-<body>
-    <h1>Página do Aluno</h1>
+<body class="{% if dark_mode %}dark-mode{% endif %}">
 
-    <!-- Formulário para enviar a redação -->
-    <form method="post" action="">
-        {% csrf_token %}
-        <label for="redacao">Escreva sua redação:</label><br>
-        <textarea id="redacao" name="redacao" rows="10" cols="50" required></textarea>
-        <br>
-        <button type="submit">Enviar Redação</button>
-    </form>
+  <div class="header">
+    <img src='{% static 'assets/img/logo.png' %}' id="logo" alt="Logo">
+    <div class="text1">Área</div>
+    <div class="text2">de Estudo</div>
+    <i class="fas fa-sun mode-toggle" id="modeToggle"></i>
+  </div> 
+  
+  <div class="sidebar">
+    <div class="admin-info" style="display: flex; align-items: center;">
+      {% if aluno.foto %}
+      <img id="foto_aluno" src="{{ aluno.foto.url }}" alt="Foto" class="foto-redonda">
+  {% else %}
+      <img id="nada" src="{% static 'assets/img/icone_avatar2.png' %}" alt="Foto" class="foto-redonda">
+  {% endif %}
+        <form id="form_foto" action="" method="POST" enctype="multipart/form-data" style="display: none;">
+          {% csrf_token %}
+          <input type="file" id="id_foto" name="foto" onchange="submitFoto();" style="display: none;">
+      </form>
+        <div class="user-info">{% if aluno %}{{ aluno.nome_aluno }}{% endif %}</div>
+    </div>
 
-    <br>
+    <a href="#" onclick="toggleForm('formRedacao'); return false;" style="text-decoration: none;">Fazer Redação</a>
+    <a href="#" style="text-decoration: none;">Minhas Redações</a>
+    <div class="configuracoes" onclick="toggleConfiguracoes(); return false;">
+      <a href="#"><i class="fas fa-cog"></i> Configurações</a>
+      <div id="submenuConfiguracoes" class="submenu">
+          <a href="#" onclick=""><i class="fas fa-camera"></i> Atualizar Foto</a>
+      </div>
+    </div>
+    <a href="{% url 'logout_aluno' %}" class="logout" style="text-decoration: none;">Logout</a>
+  </div>
 
-    <!-- Opção de ver redações anteriores -->
-    <a href="">Ver Redações Anteriores</a>
+  <div class="container">
+    <h1 class="text-center my-4"></h1>
 
-    <br>
+    {% if messages %}
+    <div class="alert-container">
+      {% for message in messages %}
+        <div class="alert alert-success" role="alert">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+    {% endif %}
 
-<!-- Formulário para logout -->
-<!-- Formulário para logout -->
-<form method="post" action="{% url 'logout_aluno' %}">
-    {% csrf_token %}
-    <button type="submit">Logout</button>
-</form>
+    <div id="formRedacao" style="display: none;">
+      <form method="POST" action="" class="custom-form">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="tema_redacao">Tema da redação:</label>
+            <input type="text" id="tema_redacao" name="tema_redacao" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="redacao">Escreva sua redação:</label>
+            <textarea id="redacao" name="redacao" class="form-control" rows="10" required></textarea>
+          </div>
+          <div class="form-group text-center">
+            <button type="submit" class="btn btn-primary">Enviar Redação</button>
+          </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      &copy; 2024 Todos os direitos reservados.
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    document.getElementById('modeToggle').addEventListener('click', function() {
+      document.body.classList.toggle('dark-mode');
+      if (document.body.classList.contains('dark-mode')) {
+        document.cookie = "dark_mode=1; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/";
+      } else {
+        document.cookie = "dark_mode=0; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/";
+      }
+    });
+
+    if (document.cookie.replace(/(?:(?:^|.*;\s*)dark_mode\s*\=\s*([^;]*).*$)|^.*$/, "$1") === "1") {
+      document.body.classList.add('dark-mode');
+    }
+
+    function toggleForm(formId) {
+      var form = document.getElementById(formId);
+      if (form.style.display === "none") {
+        form.style.display = "block";
+      } else {
+        form.style.display = "none";
+      }
+    }
+
+    function toggleConfiguracoes() {
+      $("#submenuConfiguracoes").slideToggle("slow");
+    }
+
+    function selecionarFoto() {
+      document.getElementById("id_foto").click();
+    }
+    
+    function submitFoto() {
+      document.getElementById("form_foto").submit();
+    }
 
 
 
+
+  </script>
 </body>
 </html>
