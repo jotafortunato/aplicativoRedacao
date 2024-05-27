@@ -1,190 +1,262 @@
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <link rel="icon" href="logo.ico">
-          <style>
-              body, html {
-                  margin: 0;
-                  padding: 0;
-                  font-family: Arial, sans-serif;
-                  height: 100%;
-                  display: flex;
-                  flex-direction: column;
-              }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="logo.ico">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
 
-              body {
-                  font-family: Arial, sans-serif;
-                  background-color: #121212;
-                  margin: 0;
-                  padding: 0;
-                  display: flex;
-                  flex-direction: column;
-                  height: 100vh;
-                  background-image: url('background.jpg');
-                  background-size: cover;
-                  background-position: center;
-                  background-repeat: no-repeat;
-                  background-attachment: fixed;
-              }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
 
-              .sidebar {
-                  width: 250px;
-                  background-color: rgba(52, 58, 64, 0.8);
-                  color: white;
-                  padding: 20px;
-                  display: flex;
-                  flex-direction: column;
-              }
+        .sidebar {
+            width: 250px;
+            background-color: rgba(52, 58, 64, 0.8);
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
 
-              .sidebar h2 {
-                  margin-top: 0;
-              }
+        .sidebar h2 {
+            margin-top: 0;
+        }
 
-              .sidebar a {
-                  text-decoration: none;
-                  color: white;
-                  padding: 10px;
-                  margin: 5px 0;
-                  display: block;
-                  border-radius: 5px;
-                  transition: background-color 0.8s;
-              }
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+            padding: 10px;
+            margin: 5px 0;
+            display: block;
+            border-radius: 5px;
+            transition: background-color 0.8s;
+        }
 
-              #configuracoes {
-                  background-color: rgba(52, 58, 64, 0.8);
-                  color: white;
-                  transition: background-color 0.8s;
-              }
+        #configuracoes {
+            background-color: rgba(52, 58, 64, 0.8);
+            color: white;
+            transition: background-color 0.8s;
+        }
 
-              #configuracoes:hover {
-                  background-color: purple;
-              }
+        #configuracoes:hover {
+            background-color: purple;
+        }
 
-              #historico-redacao {
-                  background-color: rgba(52, 58, 64, 0.8);
-                  color: white;
-                  transition: background-color 0.8s;
-              }
+        #historico-redacao {
+            background-color: rgba(52, 58, 64, 0.8);
+            color: white;
+            transition: background-color 0.8s;
+        }
 
-              #historico-redacao:hover {
-                  background-color: purple;
-              }
+        #historico-redacao:hover {
+            background-color: purple;
+        }
 
-              #corrigir-redacoes {
-                  background-color: rgba(52, 58, 64, 0.8);
-                  color: white;
-                  transition: background-color 0.8s;
-              }
+        #corrigir-redacoes {
+            background-color: rgba(52, 58, 64, 0.8);
+            color: white;
+            transition: background-color 0.8s;
+        }
 
-              #corrigir-redacoes:hover {
-                  background-color: purple;
-              }
+        #corrigir-redacoes:hover {
+            background-color: purple;
+        }
 
-              .logout {
-                  background-color: #495057;
-                  color: white;
-                  transition: background-color 0.8s;
-              }
+        .logout {
+            background-color: #495057;
+            color: white;
+            transition: background-color 0.8s;
+        }
 
-              .logout:hover {
-                  background-color: #c82333;
-              }
+        .logout:hover {
+            background-color: #c82333;
+        }
 
-              .content {
-                  flex-grow: 1;
-                  padding: 20px;
-                  background-color: rgba(255, 255, 255, 0.6);
-              }
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.6);
+        }
 
-              .header {
-                  display: flex;
-                  justify-content: space-between;
-                  align-items: center;
-                  padding: 10px 20px;
-                  background-color: rgba(52, 58, 64, 0.8);
-                  color: white;
-              }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: rgba(52, 58, 64, 0.8);
+            color: white;
+        }
 
-              .header .profile {
-                  display: flex;
-                  align-items: center;
-              }
+        .header .profile {
+            display: flex;
+            align-items: center;
+        }
 
-              .header .profile img {
-                  border-radius: 50%;
-                  width: 40px;
-                  height: 40px;
-                  margin-right: 10px;
-              }
+        .header .profile img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
 
-              #logo {
-                  width: 50px;
-                  height: auto;
-                  border-radius: 50%;
-                  margin-right: 10px;
-                  display: inline-block;
-                  vertical-align: middle;
-              }
+        #logo {
+            width: 50px;
+            height: auto;
+            border-radius: 50%;
+            margin-right: 10px;
+            display: inline-block;
+            vertical-align: middle;
+        }
 
-              .area-estudo {
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                  color: white;
-                  width: 100%;
-                  height: 70px;
-              }
-          </style>
-          <title>Painel do Professor</title>
-      </head>
-      <body>
-          <div class="header">
-              <div class="profile">
-                  <img src="usuario.png" alt="Foto do Professor">
-                  <span>Professor</span>
-              </div>
-              <div class="area-estudo">
-                  <img src="logo.jpg" id="logo">
-                  <span>Área do Professor</span>
-              </div>
-          </div>
-          <div style="display: flex; height: 100%;">
-              <div class="sidebar">
-                  <h2>Painel do Professor</h2>
-                  <a href="#" id="historico-redacao">Histórico de Redação</a>
-                  <a href="#" id="corrigir-redacoes">Corrigir Redações</a>
-                  <a href="#" id="configuracoes">Configurações</a>
-                  <a href="#" class="logout" id="logout">Logout</a>
-              </div>
-              <div class="content" id="content">
-                  <!-- Conteúdo da página será carregado aqui -->
-              </div>
-          </div>
-          <script>
-              const redacoesEntregues = 10;
-              const redacoesCorrigidas = 7;
+        .area-estudo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            width: 100%;
+            height: 70px;
+        }
+        .btn-enviar-nota {
+            background-color: #3BE88A;
+            color: black;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: 2px 2px 2px black;
+        }
 
-              document.getElementById('historico-redacao').addEventListener('click', function () {
-                  document.getElementById('content').innerHTML = `
-                      <h1>Histórico de Redação</h1>
-                      <p>Quantidade de Redações Entregues: ${redacoesEntregues}</p>
-                      <p>Quantidade de Redações Corrigidas: ${redacoesCorrigidas}</p>
-                  `;
-              });
+        .btn-enviar-nota:hover {
+            background-color: #3BCA8A;
+        }
+    </style>
+    <title>Painel do Professor</title>
+</head>
+<body>
+    <div class="header">
+        <div class="profile">
+            <img src="usuario.png" alt="Foto do Professor">
+            <span>Professor</span>
+        </div>
+        <div class="area-estudo">
+            <img src="logo.jpg" id="logo">
+            <span>Área do Professor</span>
+        </div>
+    </div>
+    <div style="display: flex; height: 100%;">
+        <div class="sidebar">
+            <h2>Painel do Professor</h2>
+            <a href="#" id="historico-redacao">Histórico de Redação</a>
+            <a href="#" id="corrigir-redacoes">Corrigir Redações</a>
+            <a href="#" id="configuracoes">Configurações</a>
+            <a href="#" class="logout" id="logout">Logout</a>
+        </div>
+        <div class="content" id="content">
+        </div>
+    </div>
+    <script>
+        const redacoesEntregues = 10;
+        const redacoesCorrigidas = 7;
 
-              document.getElementById('corrigir-redacoes').addEventListener('click', function () {
-                  document.getElementById('content').innerHTML = '<h1>Corrigir Redações</h1><p>Conteúdo para Corrigir Redações.</p>';
-              });
+        document.getElementById('historico-redacao').addEventListener('click', function () {
+            document.getElementById('content').innerHTML = `
+                <h1>Histórico de Redação</h1>
+                <p>Quantidade de Redações Entregues: ${redacoesEntregues}</p>
+                <p>Quantidade de Redações Corrigidas: ${redacoesCorrigidas}</p>
+            `;
+        });
 
-              document.getElementById('configuracoes').addEventListener('click', function () {
-                  document.getElementById('content').innerHTML = '<h1>Configurações</h1><p>Conteúdo das Configurações.</p>';
-              });
+        document.getElementById('corrigir-redacoes').addEventListener('click', function () {
+            document.getElementById('content').innerHTML = ''; 
+            const contentDiv = document.getElementById('content');
 
-              document.getElementById('logout').addEventListener('click', function () {
-                  alert('Você saiu do sistema.');
-              });
-          </script>
-      </body>
-      </html>
+            const h1 = document.createElement('h1');
+            h1.textContent = 'Corrigir Redações';
+            contentDiv.appendChild(h1);
+
+            const p = document.createElement('p');
+            p.textContent = 'Conteúdo para Corrigir Redações.';
+            contentDiv.appendChild(p);
+
+            const label = document.createElement('label');
+            label.setAttribute('for', 'nota');
+            label.textContent = 'Insira a nota:';
+            contentDiv.appendChild(label);
+
+            const inputNota = document.createElement('input');
+            inputNota.setAttribute('type', 'number');
+            inputNota.setAttribute('id', 'nota');
+            inputNota.setAttribute('name', 'nota');
+            contentDiv.appendChild(inputNota);
+
+            const btnEnviarNota = document.createElement('button');
+            btnEnviarNota.textContent = 'Enviar Nota';
+            btnEnviarNota.addEventListener('click', enviarNota);
+            contentDiv.appendChild(btnEnviarNota);
+        });
+
+        document.getElementById('configuracoes').addEventListener('click', function () {
+            document.getElementById('content').innerHTML = '<h1>Configurações</h1><p>Conteúdo das Configurações.</p>';
+        });
+
+        document.getElementById('logout').addEventListener('click', function () {
+            alert('Você saiu do sistema.');
+        });
+
+        function enviarNota() {
+            const nota = document.getElementById('nota').value;
+            alert(`Nota enviada: ${nota}`);
+        }
+        document.getElementById('corrigir-redacoes').addEventListener('click', function () {
+            document.getElementById('content').innerHTML = ''; 
+            const contentDiv = document.getElementById('content');
+
+            const h1 = document.createElement('h1');
+            h1.textContent = 'Corrigir Redações';
+            contentDiv.appendChild(h1);
+
+            const p = document.createElement('p');
+            p.textContent = 'Conteúdo para Corrigir Redações.';
+            contentDiv.appendChild(p);
+
+            const label = document.createElement('label');
+            label.setAttribute('for', 'nota');
+            label.textContent = 'Insira a nota:';
+            contentDiv.appendChild(label);
+
+            const inputNota = document.createElement('input');
+            inputNota.setAttribute('type', 'number');
+            inputNota.setAttribute('id', 'nota');
+            inputNota.setAttribute('name', 'nota');
+            contentDiv.appendChild(inputNota);
+
+            const btnEnviarNota = document.createElement('button');
+            btnEnviarNota.textContent = 'Enviar Nota';
+            btnEnviarNota.classList.add('btn-enviar-nota');
+            btnEnviarNota.addEventListener('click', enviarNota);
+            contentDiv.appendChild(btnEnviarNota);
+        });
+    </script>
+</body>
+</html>
