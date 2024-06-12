@@ -216,3 +216,7 @@ class CorrecaoForm(forms.ModelForm):
     class Meta:
         model = Correcao
         fields = ['feedback', 'nota']
+        widgets = {
+            'feedback': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'nota': forms.NumberInput(attrs={'class': 'form-control'})
+        }

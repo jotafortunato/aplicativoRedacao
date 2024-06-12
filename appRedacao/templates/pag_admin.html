@@ -359,7 +359,7 @@
                 {% csrf_token %}
                 <input type="hidden" name="tema_id" value="{{ tema.id }}">
                 <input type="text" name="tema_redacao" value="{{ tema.tema_redacao }}" class="form-control d-inline" style="width: auto;">
-                <button type="submit" name="edit_tema" class="btn btn-primary btn-sm">Editar</button>
+                <button type="submit" name="edit_tema" class="btn btn-success btn-sm">Editar</button>
               </form>
               <form method="POST" action="{% url 'pag_admin' %}" style="display:inline;">
                 {% csrf_token %}

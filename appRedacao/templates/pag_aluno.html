@@ -345,7 +345,7 @@
                 <div class="card mt-3 redacao-card">
                     <div class="card-body">
                         <h5 class="card-title">Redação Corrigida</h5>
-                        <p class="card-text">Arquivo: {{ correcao.id_redacao.arquivo_redacao.url }}</p>
+                        <p class="card-text">Arquivo: <a href="{{ correcao.id_redacao.arquivo_redacao.url }}" target="_blank">Visualizar Arquivo</a></p>
                         <p class="text-muted">Enviada em: {{ correcao.id_redacao.data_envio }}</p>
                         <hr>
                         <h5>Correção:</h5>

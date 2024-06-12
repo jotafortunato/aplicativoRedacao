@@ -6,30 +6,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{% static 'assets/img/logocurva.png' %}">
-    <style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+      <style>
         body, html {
             margin: 0;
-            padding: 0;
             font-family: Arial, sans-serif;
             height: 100%;
-            display: flex;
-            flex-direction: column;
+            background-color: white;
+            overflow: hidden;
+
         }
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: white;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            background-image: url('background.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-        }
+
 
         .header {
             display: flex;
@@ -38,7 +28,6 @@
             padding: 10px 20px;
             background-color: #343a40;
             color: white;
-            position: relative;
             z-index: 1;
         }
 
@@ -130,7 +119,7 @@
             position: absolute;
             top: 90px; /* Define a posição inicial abaixo do header */
             left: 0;
-            height: calc(100% - 100px); /* Altura da tela menos a altura do header */
+            height: calc(100% - 90px); /* Altura da tela menos a altura do header */
             transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
             transform: translateX(-100%);
             opacity: 0;
@@ -176,6 +165,7 @@
             flex-grow: 1;
             padding: 20px;
             background-color: rgba(255, 255, 255, 0.6);
+            overflow: auto; /* Permite a rolagem apenas do conteúdo */
         }
 
         .rotate-icon {
@@ -195,27 +185,26 @@
         }
 
         #correcao-form {
-            width: 100%;
+            text-align: center;
+            margin: 0 auto;
             padding: 20px;
             background-color: #f9f9f9;
             border: 1px solid #ddd;
             border-radius: 4px;
             margin-top: 20px;
         }
+
+
+
     </style>
 
 
-<script>
-
-
-
-    
-</script>
 
 
 
     <title>Painel do Professor</title>
 </head>
+
 <body>
     <div class="header">
         <div class="menu-icon" id="icone_menu">
@@ -226,6 +215,76 @@
             <span>Área do Professor</span>
         </div>
     </div>
+
+    
+<div class="content d-flex justify-content-center align-items-center">
+    <div class="container mt-4">
+        <div id="teste" class="row justify-content-center "> <!-- Adicionado align-items-center -->
+            <div class="col-md-6">
+                <div class="card" id="redacoes-lista" style="display: none;">
+                    <div class="card-body">
+                        <h4 class="card-title text-center mb-4">Redações para Correção</h4>
+                        <ul class="list-group list-group-flush">
+                            {% for redacao in redacoes %}
+                                <li class="list-group-item">
+                                    <p>Tema: {{ redacao.tema_redacao.tema_redacao }}</p>
+                                    <a href="{{ redacao.arquivo_redacao.url }}" target="_blank" class="btn btn-primary">Visualizar PDF</a>
+                                    <button class="btn btn-primary ml-2" onclick="showCorrecaoForm({{ redacao.id }})">Corrigir</button>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card" id="correcao-form" style="display: none;">
+                    <div class="card-body">
+                        <h4 class="card-title text-center mb-4">Formulário de Correção</h4>
+                        <form id="form-correcao" method="post" action="" class="needs-validation" novalidate>
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="feedback">Feedback</label>
+                                {{ correcao_form.feedback }}
+                                <div class="invalid-feedback"> </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="nota">Nota</label>
+                                {{ correcao_form.nota }}
+                                <div class="invalid-feedback"> </div>
+                            </div>
+                            <input type="hidden" name="id_redacao" id="id_redacao">
+                            <button id="enviar-correcao" type="submit" class="btn btn-primary btn-block">
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
+                                Enviar Correção
+                            </button>
+                            <a href="{% url 'pag_prof' %}" class="btn btn-secondary btn-block mt-3">Início</a>
+                        </form>
+                        <div id="sucesso" style="display: none; text-align: center;">
+                            <div class="alert alert-success" role="alert">
+                                Redação corrigida com sucesso!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <div style="display: flex; height: 100%;">
         <div class="sidebar" id="sidebar">
             <div class="profile">
@@ -240,45 +299,9 @@
             <a href="{% url 'logout_aluno' %}" class="logout" style="text-decoration: none;">Logout</a>
         </div>
 
-        <div class="container mt-4 d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card" id="redacoes-lista" style="display: none;">
-                        <div class="card-body">
-                            <h4 class="card-title text-center mb-4">Redações para Correção</h4>
-                            <ul class="list-group list-group-flush">
-                                {% for redacao in redacoes %}
-                                    <li class="list-group-item">
-                                        <p>Tema: {{ redacao.tema_redacao.tema_redacao }}</p>
-                                        <a href="{{ redacao.arquivo_redacao.url }}" target="_blank">Visualizar PDF</a>
-                                        <button class="btn btn-primary ml-2" onclick="showCorrecaoForm({{ redacao.id }})">Corrigir</button>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card" id="correcao-form" style="display: none;">
-                        <div class="card-body">
-                            <h4 class="card-title text-center mb-4">Formulário de Correção</h4>
-                            <form method="post" action="">
-                                {% csrf_token %}
-                                <div class="form-group">
-                                    {{ correcao_form.feedback }}
-                                </div>
-                                <div class="form-group">
-                                    {{ correcao_form.nota }}
-                                </div>
-                                <input type="hidden" name="id_redacao" id="id_redacao">
-                                <button type="submit" class="btn btn-primary btn-block">Enviar Correção</button>
-                                <a href="{% url 'pag_prof' %}" class="btn btn-secondary btn-block mt-3">Início</a>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    </div>
+
+
 
 
 
@@ -298,9 +321,36 @@ function showCorrecaoForm(redacaoId) {
     document.getElementById('redacoes-lista').style.display = 'none';
     document.getElementById('correcao-form').style.display = 'block';
 }
+
+
+
+
+
+
+
+
+document.getElementById('form-correcao').addEventListener('submit', function(event) {
+    event.preventDefault(); // Impede o envio padrão do formulário
+
+    // Mostra o indicador de envio
+    var spinner = document.getElementById('enviar-correcao').querySelector('.spinner-border');
+    spinner.style.display = 'inline-block';
+
+    // Simula um atraso de 2 segundos (você pode substituir isso por uma chamada AJAX real)
+    setTimeout(function() {
+        // Oculta o indicador de envio
+        spinner.style.display = 'none';
+
+        // Mostra o aviso de sucesso
+        document.getElementById('sucesso').style.display = 'block';
+
+        // Submete o formulário
+        document.getElementById('form-correcao').submit();
+    }, 4000); // 2 segundos de atraso
+});
 </script>
         
-    </div>
+
 
 
     <script>
@@ -327,5 +377,10 @@ function showCorrecaoForm(redacaoId) {
             }
         });
     </script>
+
+
+
+
+
 </body>
 </html>
