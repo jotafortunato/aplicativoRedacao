@@ -14,8 +14,8 @@
     <link rel="icon" href='{% static 'assets/img/logocurva.png' %}'>
     
     <style>
-        body {
-            background-image: url("{% static 'assets/img/background2.jpg' %}");
+        body{
+
 
         }
         
@@ -52,8 +52,8 @@
 
         /* Estilo para o hover do dropdown do header */
         .dropdown-menu a:hover {
-            background-color: #ffffff;
-            color: #5D02B7;
+        background-color: grey; /* Define a cor de fundo como preto */
+        color: #ffffff; /* Define a cor do texto como branca para melhor contraste */
         }
 
         /* Estilo para os botões de login */
@@ -90,12 +90,102 @@
             color: #ffffff; /* Cor do link */
             margin-right: 10px;
           }
+
+
+
+
+
+          .cookie-consent {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #282c34;
+            color: white;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            max-width: 90%;
+            width: 300px;
+        }
+        
+        .cookie-consent.show {
+            display: flex;
+        }
+        
+        .cookie-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .cookie-consent p {
+            margin: 0 0 10px 0;
+            text-align: center;
+        }
+        
+        .cookie-consent a {
+            color: #61dafb;
+            text-decoration: none;
+        }
+        
+        .cookie-consent a:hover {
+            text-decoration: underline;
+        }
+        
+        .cookie-consent button {
+            background-color: #61dafb;
+            border: none;
+            color: #282c34;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        
+        .cookie-consent button:hover {
+            background-color: #21a1f1;
+        }
       
 
+
+
+
+
+
+        .message-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #ffcccc;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: 1px solid #ff6666;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 9999;
+        }
 
     </style>
 </head>
 <body>
+
+
+
+    <div id="cookie-consent" class="cookie-consent">
+        <div class="cookie-content">
+            <p>Este site utiliza cookies para melhorar sua experiência de navegação. <a href="{% url 'cookies' %}" target="_blank" rel="noopener noreferrer">Saiba mais</a>.</p>
+            <button id="accept-cookies">Aceitar</button>
+        </div>
+    </div>
+
+
     <!-- Header -->
     <nav class="navbar navbar-expand-lg navbar-light">
         <a class="navbar-brand" href="#"><img src='{% static 'assets/img/logo.png' %}' ></a>
@@ -112,8 +202,13 @@
                         <!--- <a class="dropdown-item" href="/cadastroAluno">Cadastro Aluno</a> -->
                         <!--- <a class="dropdown-item" href="/cadastroProfessor">Cadastro Professor</a> -->
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{% url 'login_aluno' %}">Login Aluno</a>
-                        <a class="dropdown-item" href="/loginProfessor">Login Professor</a>
+
+                        <!--
+                        <a class="dropdown-item" href="{% url 'login_aluno' %}">Login do Aluno</a>
+                        <a class="dropdown-item" href="{% url 'login_prof' %}">Login do Professor</a>   -->
+                        <a class="dropdown-item" target=”_blank” href="https://linktr.ee/escrevendonaquarentena">Inscreva-se</a>
+                        <a class="dropdown-item" href="{% url 'login_admin' %}">Login do Administrador</a>
+
                     </div>
                 </li>
             </ul>
@@ -148,7 +243,7 @@
                 <a href="{% url 'login_aluno' %}" class="btn btn-aluno btn-lg btn-block">Sou Aluno</a>
             </div>
             <div class="col-md-6">
-                <a href="/loginProfessor" class="btn btn-professor btn-lg btn-block">Sou Professor</a>
+                <a href="{% url 'login_prof' %}" class="btn btn-professor btn-lg btn-block">Sou Professor</a>
             </div>
         </div>
         
@@ -254,7 +349,7 @@
     <div class="footer">
 
         <div class='text-white'>
-          &copy; 2024 Todos os direitos reservados. <!-- Declaração de direitos autorais -->
+            &copy; 2024 SeR "Sistema de Envio de Redação". Todos os direitos reservados.
         </div>
     </div>
 
@@ -263,6 +358,25 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const cookieConsent = document.getElementById("cookie-consent");
+            const acceptCookiesButton = document.getElementById("accept-cookies");
+        
+            if (!localStorage.getItem("cookiesAccepted")) {
+                cookieConsent.classList.add("show");
+            }
+        
+            acceptCookiesButton.addEventListener("click", function() {
+                localStorage.setItem("cookiesAccepted", "true");
+                cookieConsent.classList.remove("show");
+            });
+        });
+
+
+    </script>
 </body>
 
 

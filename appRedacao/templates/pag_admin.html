@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Escrevendo na Quarentena</title>
-  <link rel="icon" href='{% static "assets/img/logo.ico" %}' alt="Minha Imagem">
+  <link rel="icon" href='{% static "assets/img/logocurva.png" %}' alt="Minha Imagem">
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <style>
@@ -154,35 +154,50 @@
       background-color: red;
   }
   
+  .alerts-container .alert {
+    text-align: center;
+  }
 
+
+
+  #formularioTema {
+            display: none; /* Esconder inicialmente */
+  }
 
 
 
 
   </style>
+
+
+
+
 </head>
 
 <body>
+
+
+
   <div class="header">
+
+
+    <div id="botaoMenu" class="menu-toggle" onclick="toggleSidebar()">
+      <i class="fas fa-bars fa-2x"></i> <!-- Adicionado fa-2x para aumentar o tamanho do ícone -->
+    </div>
+
     <img src='{% static "assets/img/logo.png" %}' id="logo" alt="Logo">
     <div class="text1">Admin</div>
     <div class="text2">do Sistema</div>
 
-
-
-
-
-  <div class="menu-toggle" onclick="toggleSidebar()">
-    <i class="fas fa-bars fa-2x"></i> <!-- Adicionado fa-2x para aumentar o tamanho do ícone -->
-  </div>
   </div>
 
   <div class="sidebar" id="sidebar">
     <div class="admin-info" style="display: flex; align-items: center;">
       <img src="{% static "assets/img/icone_avatar2.png" %}" alt="Avatar do Administrador" style="width: 50px; height: 50px;">
       <p style="text-align: center; padding-left: 10px; margin-top: 5px; color: white;">{{ admin.funcao }}</p>
+      
     </div>
-    <a href="#" onclick="toggleSubmenu('submenuContas'); rotateArrow(this);" style="text-decoration: none;">Novo usuário <i class="fas fa-chevron-down" id="arrow"></i></a>
+    <a href="#" onclick="toggleSubmenu('submenuContas'); rotateArrow(this);" style="text-decoration: none;"> Novo usuário <i class="fas fa-chevron-down" id="arrow"></i></a>
   
     <div id="submenuContas" class="submenu">
       <a href="#" onclick="mostrarFormulario('professor')" style="text-decoration: none;" id="professorBtn">Cadastrar Professor</a>
@@ -197,13 +212,13 @@
       <a href="#" onclick="toggleInfo(); return false;" style="text-decoration: none;">Deletar Usuário</a>
 
     </div>
+
+    <a href="#" onclick="toggleForm('formularioTema')" style="text-decoration: none;" id="temaBtn">Cadastrar Tema</a>
   
     <a href="{% url 'logout_admin' %}" class="logout" style="text-decoration: none;">Logout</a>
   </div>
 
   
-
-<!-- Restante do seu HTML continua aqui -->
 
 
 
@@ -228,14 +243,14 @@
 
 <div id="formularioProfessor" class="container mt-5">
   <div class="card">
-    <div class="card-header bg-success text-white">
+    <div class="card-header bg-secondary text-white">
       Cadastrar Professor
     </div>
     <div class="card-body">
       <form method="POST" class="mt-4">
         {% csrf_token %}
         {{ formProfessor.as_p }}
-        <button type="submit" class="btn btn-success">Cadastrar</button>
+        <button type="submit" class="btn btn-secondary">Cadastrar</button>
       </form>
     </div>
   </div>
@@ -243,14 +258,14 @@
 
 <div id="formularioAdmin" class="container mt-5">
   <div class="card">
-    <div class="card-header bg-success text-white">
+    <div class="card-header bg-secondary text-white">
       Cadastrar Admin
     </div>
     <div class="card-body">
       <form method="POST">
         {% csrf_token %}
         {{ formAdmin.as_p }}
-        <button type="submit" class="btn btn-success">Cadastrar</button>
+        <button type="submit" class="btn btn-secondary">Cadastrar</button>
       </form>
     </div>
   </div>
@@ -259,24 +274,120 @@
 
 <div id="formularioAluno" class="container mt-5"  style="display: none;">
   <div class="card">
-      <div class="card-header bg-success text-white">
+      <div class="card-header bg-secondary text-white">
           Cadastrar Aluno
       </div>
       <div class="card-body">
         <form method="post" enctype="multipart/form-data">
           {% csrf_token %}
-          {{ formAluno.as_p }}  <!-- Renderize o formulário de cadastro do aluno -->
-          <button type="submit" class="btn btn-success">Cadastrar</button>
+          {{ formAluno.as_p }}  
+          <button type="submit" class="btn btn-secondary">Cadastrar</button>
       </form>
       </div>
+  </div>
+</div>
+
+<div id="infoDiv" class="container mt-5" style="display: {% if user_found %}block{% else %}none{% endif %};">
+  <div class="card">
+    <div class="card-header bg-secondary text-white">
+      Deletar ou Desativar usuário
+    </div>
+    <div class="card-body">
+      <form method="POST" id="searchForm">
+        {% csrf_token %}
+        {{ formDelete.as_p }}
+        <button type="submit" class="btn btn-secondary" id="buscarUsuario" name="buscar_usuario">Buscar</button>
+      </form>
+      {% if user_found %}
+        {% if user_found|default_if_none:"" %}
+          <p>Você está prestes a excluir ou desativar o usuário: {{ user_found }}</p>
+          {% if user_active is not None and not user_active %}
+            <p class="text-warning">Aviso: Este usuário está desativado.</p>
+          {% endif %}
+          <form method="POST">
+            {% csrf_token %}
+            {% if formDelete.cleaned_data.email %}
+              <input type="hidden" name="email" value="{{ formDelete.cleaned_data.email }}">
+            {% endif %}
+            <button type="submit" class="btn btn-danger" name="confirm_delete">Confirmar Exclusão</button>   
+            {% if user_active is not None %}
+              {% if user_active %}
+                <button type="submit" class="btn btn-warning" name="deactivate_user">Desativar</button>
+              {% else %}
+                <button type="submit" class="btn btn-success" name="activate_user">Ativar</button>
+              {% endif %}
+            {% endif %}
+            <button type="button" class="btn btn-secondary" onclick="cancelDelete()">Cancelar</button>
+          </form>
+        {% else %}
+          <p>Nenhum usuário encontrado com o email fornecido.</p>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+
+
+<div id="formularioTema" class="container mt-5">
+  <div class="card">
+    <div class="card-header bg-secondary text-white">
+      Cadastrar Tema
+    </div>
+    <div class="card-body">
+      <form method="POST" action="{% url 'pag_admin' %}" class="mt-4">
+        {% csrf_token %}
+        {{ formTema.as_p }}
+        <button type="submit" name="formTema" class="btn btn-secondary">Cadastrar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Lista de Temas -->
+  <div class="container mt-5">
+    <div class="card">
+      <div class="card-header bg-secondary text-white">
+        Temas Cadastrados
+      </div>
+      <div class="card-body">
+        <ul class="list-group">
+          {% for tema in temas %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span>{{ tema.tema_redacao }}</span>
+            <div>
+              <form method="POST" action="{% url 'pag_admin' %}" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="tema_id" value="{{ tema.id }}">
+                <input type="text" name="tema_redacao" value="{{ tema.tema_redacao }}" class="form-control d-inline" style="width: auto;">
+                <button type="submit" name="edit_tema" class="btn btn-primary btn-sm">Editar</button>
+              </form>
+              <form method="POST" action="{% url 'pag_admin' %}" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="tema_id" value="{{ tema.id }}">
+                <button type="submit" name="delete_tema" class="btn btn-danger btn-sm">Excluir</button>
+              </form>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
   </div>
 </div>
 
 
 
 
+
+
+</div>
+
+
+
+
+
 {% if messages %}
-<div class="mt-3">
+<div class="mt-3 alerts-container">
   {% for message in messages %}
   <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
     {{ message }}
@@ -289,43 +400,8 @@
 {% endif %}
 
 
-<div id="infoDiv" class="container mt-5" style="display: {% if user_found %}block{% else %}none{% endif %};">
-  <div class="card">
-      <div class="card-header bg-success text-white">
-          Deletar ou Desativar usuário
-      </div>
-      <div class="card-body">
-          <form method="POST" id="searchForm">
-              {% csrf_token %}
-              {{ formDelete.as_p }}
-              <button type="submit" class="btn btn-success" name="buscar_usuario">Buscar</button>
-          </form>
-          {% if user_found %}
-              {% if user_found|default_if_none:"" %}
-                  <p>Você está prestes a excluir ou desativar o usuário: {{ user_found }}</p>
-                  {% if user_active is not None and not user_active %}
-                      <p class="text-warning">Aviso: Este usuário está desativado.</p>
-                  {% endif %}
-                  <form method="POST">
-                      {% csrf_token %}
-                      <input type="hidden" name="email" value="{{ formDelete.cleaned_data.email }}">
-                      <button type="submit" class="btn btn-danger" name="confirm_delete">Confirmar Exclusão</button>
-                      {% if user_active is not None %}
-                          {% if user_active %}
-                              <button type="submit" class="btn btn-warning" name="deactivate_user">Desativar</button>
-                          {% else %}
-                              <button type="submit" class="btn btn-success" name="activate_user">Ativar</button>
-                          {% endif %}
-                      {% endif %}
-                      <button type="button" class="btn btn-secondary" onclick="cancelDelete()">Cancelar</button>
-                  </form>
-              {% else %}
-                  <p>Nenhum usuário encontrado com o email fornecido.</p>
-              {% endif %}
-          {% endif %}
-      </div>
-  </div>
-</div>
+
+
 
 <script>
 function showDeleteDiv() {
@@ -358,28 +434,8 @@ document.getElementById('searchForm').addEventListener('submit', function(event)
 
 
 
-
-
-
-
-
-
-
-
       
       <div class="content">
-
-
-        
-
-
-
-
-
-
-
-
-
 
 
 
@@ -510,8 +566,9 @@ document.getElementById('searchForm').addEventListener('submit', function(event)
     }
 
     document.getElementById('buscarUsuario').addEventListener('click', function(event) {
-      document.getElementById('infoDiv').style.display = 'block';
-  });
+    document.getElementById('infoDiv').style.display = 'block';
+});
+
 
 
   function cancelDelete() {
@@ -554,6 +611,12 @@ function toggleSubmenu(submenuId) {
 
 
   </script>
+
+  
+
+
+
+
 </body>
 
 </html>

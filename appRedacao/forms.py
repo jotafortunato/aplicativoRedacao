@@ -1,5 +1,5 @@
 from django import forms 
-from .models import Aluno, Redacoes, Professor, Admin
+from .models import Aluno, Redacoes, Professor, Admin, Correcao, TemaRedacao
 from django.contrib.auth.hashers import check_password
 
 
@@ -184,24 +184,22 @@ class AdminLoginForm(forms.Form):
 class RedacaoForm(forms.ModelForm):
     class Meta:
         model = Redacoes
-        fields = ['tema_redacao', 'texto_redacao']
+        fields = ['tema_redacao', 'arquivo_redacao']
         widgets = {
-            'tema_redacao': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Tema da redação'}),
-            'texto_redacao': forms.Textarea(attrs={'class': 'form-control', 'rows': 10, 'placeholder': 'Escreva sua redação'}),
+            'tema_redacao': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Tema da Redação'}),
+            'arquivo_redacao': forms.FileInput(attrs={'class': 'form-control'}),
         }
 
-    def clean_texto_redacao(self):
-        texto = self.cleaned_data['texto_redacao']
-        # Aqui você pode adicionar qualquer formatação adicional se necessário
-        texto = self.padronizar_formatacao(texto)
-        return texto
 
-    def padronizar_formatacao(self, valor):
-        # Remove espaços em branco no início e no fim e substitui múltiplos espaços internos por um único espaço
-        linhas = valor.split('\n')
-        linhas_formatadas = [' '.join(linha.strip().split()) for linha in linhas]
-        texto_formatado = '\n'.join(linhas_formatadas)
-        return texto_formatado
+
+
+class TemaForm(forms.ModelForm):
+    class Meta:
+        model = TemaRedacao
+        fields = ['tema_redacao']
+        widgets = {
+            'tema_redacao': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Insira o tema desejado'}),
+        }
 
 
 
@@ -211,3 +209,10 @@ class RedacaoForm(forms.ModelForm):
 class DeleteForm(forms.Form):
     email = forms.EmailField(label='Email do usuário', widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email do usuário'}))
 
+
+
+
+class CorrecaoForm(forms.ModelForm):
+    class Meta:
+        model = Correcao
+        fields = ['feedback', 'nota']

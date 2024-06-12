@@ -5,19 +5,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página do Aluno</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="icon" href='{% static 'assets/img/logocurva.png' %}'>
     <style>
-        .header {
-            padding: 20px;
-            background-color: #343a40;
-            color: white;
-            text-align: center;
-            position: relative;
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
-        .header img {
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #343a40;
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header .profile {
+            display: flex;
+            align-items: center;
+        }
+
+        .header .profile img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        #logo {
             width: 50px;
             height: auto;
             border-radius: 50%;
@@ -26,234 +62,494 @@
             vertical-align: middle;
         }
 
-        .header .text1,
-        .header .text2 {
-            display: inline-block;
-            vertical-align: middle;
-            margin: 0;
+        .area-estudo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            width: 100%;
+            height: 70px;
         }
 
-        .header .user-info {
-            display: inline-block;
-            vertical-align: middle;
-            margin-left: 10px;
-        }
-
-        .header .mode-toggle {
-            position: absolute;
-            top: 50%;
-            right: 20px;
-            transform: translateY(-50%);
+        .menu-icon {
+            width: 30px;
+            height: 25px;
+            position: relative;
             cursor: pointer;
-            color: #ffffff;
+            transition: transform 0.5s; /* Adicionando transição para a rotação */
         }
 
-        .footer {
-            padding: 20px;
-            text-align: center;
-            color: white;
-            background-color: #343a40;
-            width: auto;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-        }
-
-        .footer a {
-            color: #ffffff;
-            margin-right: 10px;
-        }
-
-        .sidebar {
-            height: 100%;
-            width: 200px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background-color: #343a40;
-            padding-top: 20px;
-            color: white;
-            transition: width 0.3s;
-        }
-
-        .sidebar a {
-            padding: 10px 15px;
-            text-decoration: none;
-            font-size: 18px;
-            color: white;
+        .menu-icon::before,
+        .menu-icon::after,
+        .menu-icon span {
+            content: '';
             display: block;
+            width: 100%;
+            height: 4px;
+            background-color: #fff;
+            position: absolute;
             transition: 0.3s;
         }
 
-        .sidebar a:hover {
-            background-color: #575757;
+        .menu-icon::before {
+            top: 0;
         }
 
-        .submenu {
-            display: none;
-            padding-left: 15px;
+        .menu-icon span {
+            top: 50%;
+            transform: translateY(-50%);
         }
 
-        .submenu a {
-            font-size: 16px;
+        .menu-icon::after {
+            bottom: 0;
         }
 
-        .container {
-            margin-left: 220px;
+        .sidebar {
+            width: 290px;
+            background-color: rgba(52, 58, 64, 0.8);
+            color: white;
             padding: 20px;
+            display: none; /* Oculto por padrão */
+            flex-direction: column;
+            position: absolute;
+            top: 90px; /* Define a posição inicial abaixo do header */
+            left: 0;
+            height: calc(100% - 90px); /* Altura da tela menos a altura do header */
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            transform: translateX(-100%);
+            opacity: 0;
         }
 
-        body.dark-mode {
-            background-color: #121212;
-            color: #ffffff;
+        .sidebar.open {
+            display: flex;
+            transform: translateX(0);
+            opacity: 1;
         }
 
-        .dark-mode .header, .dark-mode .footer, .dark-mode .sidebar {
-            background-color: #1e1e1e;
+        .sidebar h2 {
+            margin-top: 0;
         }
 
-        .dark-mode .mode-toggle {
-            color: #f1c40f;
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+            padding: 10px;
+            margin: 5px 0;
+            display: block;
+            border-radius: 5px;
+            transition: background-color 0.8s;
         }
 
-        .dark-mode .sidebar a {
-            color: #ffffff;
+        .configuracoes {
+            background-color: rgba(52, 58, 64, 0.8);
+            color: white;
+            transition: background-color 0.8s;
+            cursor: pointer;
+            
         }
 
-        .dark-mode .sidebar a:hover {
-            background-color: #575757;
+        .configuracoes:hover {
+            background-color: purple;
         }
 
-        .sidebar a.logout:hover {
-            background-color: red;
+        .minharedacao {
+            background-color: rgba(52, 58, 64, 0.8);
+            color: white;
+            transition: background-color 0.8s;
+        }
+
+        .minharedacao:hover {
+            background-color: purple;
+        }
+
+        .fazerredacao {
+            background-color: rgba(52, 58, 64, 0.8);
+            color: white;
+            transition: background-color 0.8s;
+        }
+
+        .fazerredacao:hover {
+            background-color: purple;
+        }
+
+        .logout {
+            background-color: #495057;
+            color: white;
+            transition: background-color 0.8s;
+        }
+
+        .logout:hover {
+            background-color: #c82333;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .rotate-icon {
+            transform: rotate(90deg);
+        }
+
+        .foto-redonda {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+
+
+
+        #formRedacao {
+            margin-top: 50px; /* Ajuste a margem superior conforme necessário */
         }
         
-        .foto-redonda {
-          width: 50px;
-          height: 50px;
-          border-radius: 50%;
-          object-fit: cover;
-          margin-left: 3%;
-      }
+        .custom-form {
+            width: 80%; /* Ajuste a largura conforme necessário */
+            max-width: 800px; /* Defina um valor máximo para a largura */
+            margin: 0 auto; /* Centraliza o formulário horizontalmente */
+        }
+        
 
-      .user-info {
-        margin-left: 3%;
+
+
+
+        .custom-form {
+            margin-top: 20px;
+            width: 70%; /* Ajuste a largura conforme necessário */
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .redacoes-section {
+            display: none;
+            margin-top: 20px;
+            width: 70%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .redacao-card {
+            cursor: pointer;
+        }
+
+
+
+
+
+
+
+           /* Estilizando o botão de upload de arquivo */
+    .custom-file-input::-webkit-file-upload-button {
+        visibility: hidden;
     }
+
+    .custom-file-input::before {
+        content: 'Escolher Arquivo';
+        display: inline-block;
+        background: #007bff;
+        color: white;
+        padding: 8px 20px;
+        outline: none;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    .custom-file-input:hover::before {
+        background: #0056b3;
+    }
+
+    .custom-file-input:active::before {
+        background: #0056b3;
+    }
+
+    .custom-file-input:focus::before {
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    }
+
+        
     </style>
+    <title>Painel do Aluno</title>
 </head>
-<body class="{% if dark_mode %}dark-mode{% endif %}">
-
-  <div class="header">
-    <img src='{% static 'assets/img/logo.png' %}' id="logo" alt="Logo">
-    <div class="text1">Área</div>
-    <div class="text2">de Estudo</div>
-    <i class="fas fa-sun mode-toggle" id="modeToggle"></i>
-  </div> 
-  
-  <div class="sidebar">
-    <div class="admin-info" style="display: flex; align-items: center;">
-      {% if aluno.foto %}
-      <img id="foto_aluno" src="{{ aluno.foto.url }}" alt="Foto" class="foto-redonda">
-  {% else %}
-      <img id="nada" src="{% static 'assets/img/icone_avatar2.png' %}" alt="Foto" class="foto-redonda">
-  {% endif %}
-        <form id="form_foto" action="" method="POST" enctype="multipart/form-data" style="display: none;">
-          {% csrf_token %}
-          <input type="file" id="id_foto" name="foto" onchange="submitFoto();" style="display: none;">
-      </form>
-        <div class="user-info">{% if aluno %}{{ aluno.nome_aluno }}{% endif %}</div>
+<body>
+    <div class="header">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+        <div class="menu-icon" id="icone_menu">
+            <span></span>
+        </div>
+        <div class="area-estudo">
+            <img src='{% static 'assets/img/logo.png' %}' id="logo" alt="Logo">
+            <span>Área de Estudo</span>
+        </div>
     </div>
-
-    <a href="#" onclick="toggleForm('formRedacao'); return false;" style="text-decoration: none;">Fazer Redação</a>
-    <a href="#" style="text-decoration: none;">Minhas Redações</a>
-    <div class="configuracoes" onclick="toggleConfiguracoes(); return false;">
-      <a href="#"><i class="fas fa-cog"></i> Configurações</a>
-      <div id="submenuConfiguracoes" class="submenu">
-          <a href="#" onclick=""><i class="fas fa-camera"></i> Atualizar Foto</a>
-      </div>
-    </div>
-    <a href="{% url 'logout_aluno' %}" class="logout" style="text-decoration: none;">Logout</a>
-  </div>
-
-  <div class="container">
-    <h1 class="text-center my-4"></h1>
 
     {% if messages %}
-    <div class="alert-container">
-      {% for message in messages %}
-        <div class="alert alert-success" role="alert">
-          {{ message }}
+    <div class="alert-container d-flex justify-content-center align-items-center">
+        {% for message in messages %}
+        <div class="alert alert-success text-center" role="alert">
+            <div class="d-inline-block mr-2" id="countdown">10</div>
+            <div class="d-inline-block" id="message">{{ message }}</div>
         </div>
-      {% endfor %}
+        {% endfor %}
     </div>
     {% endif %}
 
+
+
     <div id="formRedacao" style="display: none;">
-      <form method="POST" action="" class="custom-form">
-          {% csrf_token %}
-          <div class="form-group">
-            <label for="tema_redacao">Tema da redação:</label>
-            <input type="text" id="tema_redacao" name="tema_redacao" class="form-control" required>
-          </div>
-          <div class="form-group">
-            <label for="redacao">Escreva sua redação:</label>
-            <textarea id="redacao" name="redacao" class="form-control" rows="10" required></textarea>
-          </div>
-          <div class="form-group text-center">
-            <button type="submit" class="btn btn-primary">Enviar Redação</button>
-          </div>
-      </form>
+        <form method="POST" action="" class="custom-form" id="redacaoForm" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+             
+                    {% for aluno in alunos %}
+                        <option value="{{ aluno.id }}">{{ aluno.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            </br>
+            <div class="form-group">
+                <label for="tema_redacao" class="mb-2">Tema da Redação: </label>
+                <select id="tema_redacao" name="tema_redacao" class="form-control" required>
+                    {% for tema in temas %}
+                        <option value="{{ tema.id }}">{{ tema.tema_redacao }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            </br>
+            <div class="form-group">
+                <label for="arquivo_redacao" class="mb-2">Arquivo da Redação: </label>
+                <input type="file" id="arquivo_redacao" name="arquivo_redacao" class="form-control-file" required>
+            </div>
+            <div class="form-group text-center mt-4">
+                <button type="submit" class="btn btn-success">Enviar Redação</button>
+            </div>
+        </form>
     </div>
-  </div>
-
-  <div class="footer">
-    <div>
-      <a href="#"><i class="fab fa-instagram"></i></a>
-      &copy; 2024 Todos os direitos reservados.
-    </div>
-  </div>
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
-    document.getElementById('modeToggle').addEventListener('click', function() {
-      document.body.classList.toggle('dark-mode');
-      if (document.body.classList.contains('dark-mode')) {
-        document.cookie = "dark_mode=1; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/";
-      } else {
-        document.cookie = "dark_mode=0; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/";
-      }
-    });
-
-    if (document.cookie.replace(/(?:(?:^|.*;\s*)dark_mode\s*\=\s*([^;]*).*$)|^.*$/, "$1") === "1") {
-      document.body.classList.add('dark-mode');
-    }
-
-    function toggleForm(formId) {
-      var form = document.getElementById(formId);
-      if (form.style.display === "none") {
-        form.style.display = "block";
-      } else {
-        form.style.display = "none";
-      }
-    }
-
-    function toggleConfiguracoes() {
-      $("#submenuConfiguracoes").slideToggle("slow");
-    }
-
-    function selecionarFoto() {
-      document.getElementById("id_foto").click();
-    }
     
-    function submitFoto() {
-      document.getElementById("form_foto").submit();
+    
+
+
+
+    
+
+
+
+
+
+    <div id="redacoesSection" class="redacoes-section">
+        <h3>Minhas Redações Corrigidas</h3>
+    
+        {% if correcoes %}
+            {% for correcao in correcoes %}
+                <div class="card mt-3 redacao-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Redação Corrigida</h5>
+                        <p class="card-text">Arquivo: {{ correcao.id_redacao.arquivo_redacao.url }}</p>
+                        <p class="text-muted">Enviada em: {{ correcao.id_redacao.data_envio }}</p>
+                        <hr>
+                        <h5>Correção:</h5>
+                        <p class="card-text">Feedback: {{ correcao.feedback }}</p>
+                        <p class="card-text">Nota: {{ correcao.nota }}</p>
+                        <p class="text-muted">Corrigida em: {{ correcao.data_correcao }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-warning" role="alert">
+                Não há redações corrigidas na data selecionada.
+            </div>
+            <a href="{% url 'pag_aluno' %}" class="btn btn-primary">Voltar às Redações</a>
+        {% endif %}
+    </div>
+    
+    
+    
+<!-- Modal -->
+<div class="modal" tabindex="-1" role="dialog" id="redacaoModal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="redacaoModalLabel">Redação</h5>
+          <!-- Remover o botão "x" -->
+        </div>
+        <div class="modal-body">
+          <div id="redacaoModalContent"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+
+
+
+    
+
+
+
+    <div style="display: flex; height: 100%;">
+        <div class="sidebar" id="sidebar">
+            <div class="admin-info" style="display: flex; align-items: center;">
+                {% if aluno.foto %}
+                <img id="foto_aluno" src="{{ aluno.foto.url }}" alt="Foto" class="foto-redonda">
+            {% else %}
+                <img id="nada" src="{% static 'assets/img/icone_avatar2.png' %}" alt="Foto" class="foto-redonda">
+            {% endif %}
+                <form id="form_foto" action="" method="POST" enctype="multipart/form-data" style="display: none;">
+                    {% csrf_token %}
+                    <input type="file" id="id_foto" name="foto" onchange="submitFoto();" style="display: none;">
+                </form>
+                <div class="user-info">{% if aluno %}{{ aluno.nome_aluno }}{% endif %}</div>
+            </div>
+            <a href="#" class='fazerredacao' onclick="toggleForm('formRedacao'); return false;" style="text-decoration: none;">Fazer Redação</a>
+            <a href="#" class='minharedacao' onclick="toggleRedacoes(); return false;" style="text-decoration: none;">Minhas Redações</a>
+            <a href="#" class='configuracoes'  style="text-decoration: none;"> Configurações</a>
+
+            <a href="{% url 'logout_aluno' %}" class="logout" style="text-decoration: none;">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1 class="text-center my-4"></h1>
+    
+
+    
+    
+
+
+
+
+        
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        document.getElementById('icone_menu').addEventListener('click', function() {
+            var sidebar = document.getElementById('sidebar');
+            var menuIcon = document.getElementById('icone_menu');
+
+            if (sidebar.style.display === 'none' || sidebar.style.display === '') {
+                sidebar.style.display = 'flex';
+                setTimeout(function() {
+                    sidebar.classList.add('open');
+                }, 10); // Pequeno atraso para permitir a transição
+
+                // Girar o ícone do menu
+                menuIcon.classList.add('rotate-icon');
+            } else {
+                sidebar.classList.remove('open');
+                setTimeout(function() {
+                    sidebar.style.display = 'none';
+                }, 300); // Aguarda a transição terminar antes de ocultar
+
+                // Resetar a rotação do ícone do menu
+                menuIcon.classList.remove('rotate-icon');
+            }
+        });
+
+        // Adicionando evento para fechar o submenu das configurações ao clicar fora dele
+        document.addEventListener('click', function(event) {
+            var submenuConfiguracoes = document.getElementById('submenuConfiguracoes');
+            var configuracoes = document.querySelector('.configuracoes');
+
+            if (event.target !== submenuConfiguracoes && event.target !== configuracoes) {
+                submenuConfiguracoes.style.display = 'none';
+            }
+        });
+
+
+
+        function toggleConfiguracoes() {
+            var submenuConfiguracoes = document.getElementById('submenuConfiguracoes');
+            submenuConfiguracoes.style.display = submenuConfiguracoes.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function selecionarFoto() {
+            document.getElementById("id_foto").click();
+        }
+        
+        function submitFoto() {
+            document.getElementById("form_foto").submit();
+        }
+
+
+
+
+
+
+
+       // Seleciona o elemento de contagem regressiva
+       var countdown = document.getElementById('countdown');
+
+       // Inicia a contagem regressiva de 10 segundos
+       var seconds = 10;
+       var countdownInterval = setInterval(function() {
+           seconds--;
+           countdown.textContent = seconds;
+
+           // Remove o aviso após 10 segundos
+           if (seconds === 0) {
+               clearInterval(countdownInterval); // Limpa o intervalo de contagem regressiva
+               document.querySelector('.alert').remove(); // Remove o aviso
+           }
+       }, 1000); // 1000 milissegundos = 1 segundo
+
+
+
+
+
+
+
+
+
+
+       function toggleForm(formId) {
+        var form = document.getElementById(formId);
+        if (form.style.display === "none" || form.style.display === "") {
+            form.style.display = "block";
+        } else {
+            form.style.display = "none";
+        }
+    }
+
+    function toggleRedacoes() {
+        var redacoesSection = document.getElementById('redacoesSection');
+        if (redacoesSection.style.display === "none" || redacoesSection.style.display === "") {
+            redacoesSection.style.display = "block";
+        } else {
+            redacoesSection.style.display = "none";
+        }
     }
 
 
 
 
-  </script>
+    // Ao clicar em uma redação, exibir o modal com o texto completo
+$('.redacao-card').click(function() {
+    var tema = $(this).find('.card-title').text();
+    var texto = $(this).find('.card-text').text();
+
+    $('#redacaoModalLabel').text(tema);
+    $('#redacaoModalContent').text(texto);
+
+    $('#redacaoModal').modal('show');
+});
+
+// Ao clicar no botão "Fechar", fechar o modal
+$('#redacaoModal').on('click', '[data-dismiss="modal"]', function() {
+    $('#redacaoModal').modal('hide');
+});
+
+
+    </script>
 </body>
 </html>
+

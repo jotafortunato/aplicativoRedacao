@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Corrigir Redação</title>
+</head>
+<body>
+    <h1>Corrigir Redação: {{ redacao.titulo }}</h1>
+    <p>{{ redacao.conteudo }}</p>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Enviar Correção</button>
+    </form>
+</body>
+</html>

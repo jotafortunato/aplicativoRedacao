@@ -1,0 +1,331 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{% static 'assets/img/logocurva.png' %}">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #343a40;
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header .profile {
+            display: flex;
+            align-items: center;
+        }
+
+        .header .profile img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        #logo {
+            width: 50px;
+            height: auto;
+            border-radius: 50%;
+            margin-right: 10px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .area-estudo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            width: 100%;
+            height: 70px;
+        }
+
+        .btn-enviar-nota {
+            background-color: #3BE88A;
+            color: black;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: 2px 2px 2px black;
+        }
+
+        .btn-enviar-nota:hover {
+            background-color: #3BCA8A;
+        }
+
+        .menu-icon {
+            width: 30px;
+            height: 25px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.5s; /* Adicionando transição para a rotação */
+        }
+
+        .menu-icon::before,
+        .menu-icon::after,
+        .menu-icon span {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 4px;
+            background-color: #fff;
+            position: absolute;
+            transition: 0.3s;
+        }
+
+        .menu-icon::before {
+            top: 0;
+        }
+
+        .menu-icon span {
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .menu-icon::after {
+            bottom: 0;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: rgba(52, 58, 64, 0.8);
+            color: white;
+            padding: 20px;
+            display: none; /* Oculto por padrão */
+            flex-direction: column;
+            position: absolute;
+            top: 90px; /* Define a posição inicial abaixo do header */
+            left: 0;
+            height: calc(100% - 100px); /* Altura da tela menos a altura do header */
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+
+        .sidebar.open {
+            display: flex;
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .sidebar h2 {
+            margin-top: 0;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+            padding: 10px;
+            margin: 5px 0;
+            display: block;
+            border-radius: 5px;
+            transition: background-color 0.8s;
+        }
+
+        #configuracoes,
+        #historico-redacao,
+        #corrigir-redacoes,
+        .logout {
+            background-color: rgba(52, 58, 64, 0.8);
+            color: white;
+            transition: background-color 0.8s;
+        }
+
+        #configuracoes:hover,
+        #historico-redacao:hover,
+        #corrigir-redacoes:hover,
+        .logout:hover {
+            background-color: purple;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .rotate-icon {
+            transform: rotate(90deg);
+        }
+
+        .content h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .pdf-viewer {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #ddd;
+            margin-top: 20px;
+        }
+
+        #correcao-form {
+            width: 100%;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+    </style>
+
+
+<script>
+
+
+
+    
+</script>
+
+
+
+    <title>Painel do Professor</title>
+</head>
+<body>
+    <div class="header">
+        <div class="menu-icon" id="icone_menu">
+            <span></span>
+        </div>
+        <div class="area-estudo">
+            <img src='{% static 'assets/img/logocurva.png' %}' id="logo" alt="Logo">
+            <span>Área do Professor</span>
+        </div>
+    </div>
+    <div style="display: flex; height: 100%;">
+        <div class="sidebar" id="sidebar">
+            <div class="profile">
+                <img src="{% static 'assets/img/icone_avatar2.png' %}" alt="Foto do Professor" width="50px" height="50px">
+
+                <span>{{ professor.nome }}</span>
+            </div>
+            <br><br>
+            <a href="#" id="historico-redacao">Histórico de Redação</a>
+            <a href="javascript:void(0);" id="corrigir-redacoes" onclick="toggleRedacoes()">Corrigir Redações</a>
+            <a href="#" id="configuracoes">Configurações</a>
+            <a href="{% url 'logout_aluno' %}" class="logout" style="text-decoration: none;">Logout</a>
+        </div>
+
+        <div class="container mt-4 d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card" id="redacoes-lista" style="display: none;">
+                        <div class="card-body">
+                            <h4 class="card-title text-center mb-4">Redações para Correção</h4>
+                            <ul class="list-group list-group-flush">
+                                {% for redacao in redacoes %}
+                                    <li class="list-group-item">
+                                        <p>Tema: {{ redacao.tema_redacao.tema_redacao }}</p>
+                                        <a href="{{ redacao.arquivo_redacao.url }}" target="_blank">Visualizar PDF</a>
+                                        <button class="btn btn-primary ml-2" onclick="showCorrecaoForm({{ redacao.id }})">Corrigir</button>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card" id="correcao-form" style="display: none;">
+                        <div class="card-body">
+                            <h4 class="card-title text-center mb-4">Formulário de Correção</h4>
+                            <form method="post" action="">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    {{ correcao_form.feedback }}
+                                </div>
+                                <div class="form-group">
+                                    {{ correcao_form.nota }}
+                                </div>
+                                <input type="hidden" name="id_redacao" id="id_redacao">
+                                <button type="submit" class="btn btn-primary btn-block">Enviar Correção</button>
+                                <a href="{% url 'pag_prof' %}" class="btn btn-secondary btn-block mt-3">Início</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+<!-- Script para mostrar redações e formulario de correção -->
+
+<script>
+        let redacoesListVisible = false;
+
+function toggleRedacoes() {
+    redacoesListVisible = !redacoesListVisible;
+    document.getElementById('redacoes-lista').style.display = redacoesListVisible ? 'block' : 'none';
+    document.getElementById('correcao-form').style.display = 'none';
+}
+
+function showCorrecaoForm(redacaoId) {
+    document.getElementById('id_redacao').value = redacaoId;
+    document.getElementById('redacoes-lista').style.display = 'none';
+    document.getElementById('correcao-form').style.display = 'block';
+}
+</script>
+        
+    </div>
+
+
+    <script>
+        document.getElementById('icone_menu').addEventListener('click', function() {
+            var sidebar = document.getElementById('sidebar');
+            var menuIcon = document.getElementById('icone_menu');
+
+            if (sidebar.style.display === 'none' || sidebar.style.display === '') {
+                sidebar.style.display = 'flex';
+                setTimeout(function() {
+                    sidebar.classList.add('open');
+                }, 10); // Pequeno atraso para permitir a transição
+
+                // Girar o ícone do menu
+                menuIcon.classList.add('rotate-icon');
+            } else {
+                sidebar.classList.remove('open');
+                setTimeout(function() {
+                    sidebar.style.display = 'none';
+                }, 300); // Aguarda a transição terminar antes de ocultar
+
+                // Resetar a rotação do ícone do menu
+                menuIcon.classList.remove('rotate-icon');
+            }
+        });
+    </script>
+</body>
+</html>

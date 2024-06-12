@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layout Minimalista</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background: #fff;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle, #f0f0f0, #e0e0e0);
+            position: relative;
+            overflow: hidden;
+        }
+
+        main::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 25%;
+            width: 200px;
+            height: 200px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+
+        main::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 60%;
+            width: 150px;
+            height: 150px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+
+        section {
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        section h2 {
+            color: #333;
+            margin-top: 0;
+        }
+
+        footer {
+            background: #fff;
+            text-align: center;
+            padding: 10px 0;
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+<body>
+    <header>
+        <h1>Política de Cookies</h1>
+    </header>
+    <main>
+        <section>
+            <h2>O que são cookies?</h2>
+            <p>Os cookies são pequenos arquivos de texto que são armazenados no seu dispositivo quando você visita um site. Eles são amplamente utilizados para garantir o funcionamento eficiente dos sites, bem como para fornecer informações aos proprietários do site.</p>
+        </section>
+        <section>
+            <h2>Como usamos os cookies?</h2>
+            <p>Utilizamos cookies para melhorar a funcionalidade do nosso site, para entender melhor como nossos visitantes utilizam o site e para fornecer uma experiência de navegação personalizada. Alguns cookies são essenciais para o funcionamento do site, enquanto outros nos ajudam a melhorar o desempenho e a experiência do usuário.</p>
+        </section>
+        <section>
+            <h2>Tipos de cookies que utilizamos</h2>
+            <ul>
+                <li><strong>Cookies estritamente necessários:</strong> Esses cookies são essenciais para que você possa navegar pelo site e usar seus recursos.</li>
+                <li><strong>Cookies de desempenho:</strong> Esses cookies coletam informações sobre como os visitantes usam o site, como quais páginas são mais visitadas.</li>
+                <li><strong>Cookies de funcionalidade:</strong> Esses cookies permitem que o site se lembre das escolhas que você faz (como seu nome de usuário, idioma ou região) e forneça recursos aprimorados e mais pessoais.</li>
+            </ul>
+        </section>
+        <section>
+            <h2>Como controlar os cookies</h2>
+            <p>Você pode controlar e/ou excluir os cookies como desejar. Para mais detalhes, consulte <a href="https://www.allaboutcookies.org/manage-cookies/">www.allaboutcookies.org</a>. Você pode apagar todos os cookies que já estão no seu computador e configurar a maioria dos navegadores para bloquear a sua colocação. No entanto, se você fizer isso, talvez seja necessário ajustar manualmente algumas preferências toda vez que visitar um site e alguns serviços e funcionalidades podem não funcionar.</p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 SeR "Sistema de Envio de Redação". Todos os direitos reservados.</p>

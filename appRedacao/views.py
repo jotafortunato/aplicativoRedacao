@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from .forms import AlunoForm, AlunoLoginForm, RedacaoForm, AdminForm, AdminLoginForm, ProfessorForm, ProfessorLoginForm, DeleteForm
+from .forms import AlunoForm, AlunoLoginForm, RedacaoForm, AdminForm, AdminLoginForm, ProfessorForm, ProfessorLoginForm, DeleteForm, CorrecaoForm, TemaForm
 from django.contrib import messages
-from .models import Aluno, Redacoes, Admin, Usuarios, Professor
+from .models import Aluno, Redacoes, Admin, Usuarios, Professor, TemaRedacao, Correcao
 from django.utils import timezone
 from django.utils.timezone import activate
 
@@ -23,27 +23,30 @@ def pag_aluno(request):
     if 'aluno_id' in request.session:
         aluno_id = request.session['aluno_id']
         aluno = Aluno.objects.get(id=aluno_id)
+        
         if request.method == 'POST':
             activate('America/Sao_Paulo')
-            tema_redacao = request.POST.get('tema_redacao')
-            texto_redacao = request.POST.get('redacao')
+            redacao_form = RedacaoForm(request.POST, request.FILES)
+            if redacao_form.is_valid():
+                redacao = redacao_form.save(commit=False)
+                redacao.id_aluno = aluno
+                redacao.data_envio = timezone.now()
+                redacao.save()
+                messages.success(request, 'Redação enviada com sucesso!')
+                return redirect('pag_aluno')
+            else:
+                messages.error(request, 'Erro ao enviar a redação. Verifique os dados e tente novamente.')
 
-            redacao = Redacoes(
-                id_aluno_id=aluno_id,
-                tema_redacao=tema_redacao,
-                texto_redacao=texto_redacao,
-                data_envio=timezone.now()
-            )
-            redacao.save()
-
-            messages.success(request, 'Redação enviada com sucesso!')
-            return redirect('pag_aluno')
-
-        return render(request, 'pag_aluno.html', {'aluno': aluno})
+        correcoes = Correcao.objects.filter(id_aluno=aluno).order_by('-data_correcao')
+        return render(request, 'pag_aluno.html', {
+            'aluno': aluno,
+            'correcoes': correcoes,
+            'redacao_form': RedacaoForm(),
+            'temas': TemaRedacao.objects.all()
+        })
     else:
         messages.error(request, 'Você precisa fazer login para acessar esta página.')
         return redirect('login_aluno')
-
 
 
 #CADASTRO ALUNO
@@ -70,19 +73,25 @@ def login_aluno(request):
             email = form.cleaned_data['email']
             senha = form.cleaned_data['senha']
             aluno = Aluno.objects.filter(email=email).first()
-            if aluno and aluno.check_password(senha):
-                # Login bem-sucedido, definindo o usuário na sessão manualmente
-                request.session['aluno_id'] = aluno.id
-                return redirect('pag_aluno')  # Redireciona para a página inicial ou outra página após o login
+            if aluno:
+                if aluno.check_password(senha):
+                    if aluno.ativo:
+                        # Login bem-sucedido, definindo o usuário na sessão manualmente
+                        request.session['aluno_id'] = aluno.id
+                        return redirect('pag_aluno')  # Redireciona para a página inicial ou outra página após o login
+                    else:
+                        # Usuário inativo, exibir mensagem de aviso
+                        messages.error(request, 'Sua conta está inativa. Por favor, entre em contato com o suporte.')
+                else:
+                    # Senha incorreta, exibir mensagem de erro
+                    form.add_error('senha', 'Senha incorreta. Por favor, tente novamente.')
             else:
-                # Senha incorreta, exibir mensagem de erro
-                form.add_error('senha', 'Senha incorreta. Por favor, tente novamente.')
+                # Usuário não encontrado, exibir mensagem de erro
+                form.add_error('email', 'Não há conta associada a este e-mail.')
     else:
         form = AlunoLoginForm()
         
-    error_messages = messages.get_messages(request)
-
-    return render(request, 'login_aluno.html', {'form': form, 'error_messages': error_messages})
+    return render(request, 'login_aluno.html', {'form': form})
     
 
 
@@ -166,112 +175,48 @@ def login_admin(request):
 
 #PAGINA DO ADMIN
 
-from .forms import ProfessorForm, AdminForm  # Importe os formulários necessários
-
-
-'''
-def pag_admin(request):
-    if 'admin_id' in request.session:
-        admin_id = request.session['admin_id']
-        admin = Admin.objects.get(id=admin_id)  # Obtenha o objeto Admin com base no ID da sessão
-
-        user_found = None
-        user_email = None
-
-        if request.method == 'POST':
-            formProfessor = ProfessorForm(request.POST)
-            formAdmin = AdminForm(request.POST)
-            formDelete = DeleteForm(request.POST)
-
-            if formProfessor.is_valid():
-                formProfessor.save()
-                messages.success(request, 'Professor cadastrado com sucesso!')
-                return redirect('pag_admin')  # Redirecione para evitar reenvio do formulário
-            
-            elif formAdmin.is_valid():
-                formAdmin.save()
-                messages.success(request, 'Admin cadastrado com sucesso!')
-                return redirect('pag_admin')
-
-            elif formDelete.is_valid():
-                email = formDelete.cleaned_data['email']
-                user_email = email
-                
-                if 'confirm_delete' in request.POST:
-                    try:
-                        user = Aluno.objects.get(email=email)
-                        user.delete()
-                        messages.success(request, 'Usuário excluído com sucesso!')
-                        return redirect('pag_admin')
-                    except Aluno.DoesNotExist:
-                        try:
-                            user = Professor.objects.get(email=email)
-                            user.delete()
-                            messages.success(request, 'Usuário excluído com sucesso!')
-                            return redirect('pag_admin')
-                        except Professor.DoesNotExist:
-                            try:
-                                user = Admin.objects.get(email=email)
-                                user.delete()
-                                messages.success(request, 'Usuário excluído com sucesso!')
-                                return redirect('pag_admin')
-                            except Admin.DoesNotExist:
-                                messages.error(request, 'O usuário com o email fornecido não existe.')
-                                return redirect('pag_admin')
-                else:
-                    try:
-                        user = Aluno.objects.get(email=email)
-                        user_found = user.nome_aluno
-                    except Aluno.DoesNotExist:
-                        try:
-                            user = Professor.objects.get(email=email)
-                            user_found = user.nome
-                        except Professor.DoesNotExist:
-                            try:
-                                user = Admin.objects.get(email=email)
-                                user_found = user.nome
-                            except Admin.DoesNotExist:
-                                user_found = None
-
-            else:
-                messages.error(request, 'Erro ao cadastrar. Verifique os dados e tente novamente.')
-        else:
-            formProfessor = ProfessorForm()
-            formAdmin = AdminForm()
-            formDelete = DeleteForm()
-
-        return render(request, 'pag_admin.html', {
-            'admin': admin,
-            'formProfessor': formProfessor,
-            'formAdmin': formAdmin,
-            'formDelete': formDelete,
-            'user_found': user_found,
-            'user_email': user_email
-        })
-    else:
-        messages.error(request, 'Você precisa fazer login para acessar esta página.')
-        return redirect('login_admin')
-    
-
-    '''
-
-
 def pag_admin(request):
     if 'admin_id' in request.session:
         admin_id = request.session['admin_id']
         admin = Admin.objects.get(id=admin_id)
 
         user_found = None
-        user_found_email = None
         user_active = None
 
         if request.method == 'POST':
             formProfessor = ProfessorForm(request.POST)
             formAdmin = AdminForm(request.POST)
-            formAluno = AlunoForm(request.POST)
+            formAluno = AlunoForm(request.POST, request.FILES)
             formDelete = DeleteForm(request.POST)
+            formTema = TemaForm(request.POST)
 
-            if formProfessor.is_valid():
+            if 'formTema' in request.POST:
+                if formTema.is_valid():
+                    formTema.save()
+                    messages.success(request, 'Tema cadastrado com sucesso!')
+                    return redirect('pag_admin')
+
+            elif 'edit_tema' in request.POST:
+                tema_id = request.POST.get('tema_id')
+                tema_redacao = request.POST.get('tema_redacao')
+                try:
+                    tema = TemaRedacao.objects.get(id=tema_id)
+                    tema.tema_redacao = tema_redacao
+                    tema.save()
+                    messages.success(request, 'Tema atualizado com sucesso!')
+                except TemaRedacao.DoesNotExist:
+                    messages.error(request, 'Tema não encontrado.')
+
+            elif 'delete_tema' in request.POST:
+                tema_id = request.POST.get('tema_id')
+                try:
+                    tema = TemaRedacao.objects.get(id=tema_id)
+                    tema.delete()
+                    messages.success(request, 'Tema excluído com sucesso!')
+                except TemaRedacao.DoesNotExist:
+                    messages.error(request, 'Tema não encontrado.')
+
+            elif formProfessor.is_valid():
                 formProfessor.save()
                 messages.success(request, 'Professor cadastrado com sucesso!')
                 return redirect('pag_admin')
@@ -289,10 +234,8 @@ def pag_admin(request):
             elif formDelete.is_valid():
                 email = formDelete.cleaned_data['email']
                 user_found = None
-                user_deleted = False
-                user_deactivated = False
-                user_activated = False
-                
+                user_active = None
+
                 try:
                     aluno = Aluno.objects.get(email=email)
                     user_found = aluno
@@ -337,6 +280,10 @@ def pag_admin(request):
             formAdmin = AdminForm()
             formAluno = AlunoForm()
             formDelete = DeleteForm()
+            formTema = TemaForm()
+
+        # Obter todos os temas do banco de dados
+        temas = TemaRedacao.objects.all()
 
         return render(request, 'pag_admin.html', {
             'admin': admin,
@@ -344,28 +291,14 @@ def pag_admin(request):
             'formAdmin': formAdmin,
             'formAluno': formAluno,
             'formDelete': formDelete,
+            'formTema': formTema,
             'user_found': user_found,
-            'user_active': user_active
+            'user_active': user_active,
+            'temas': temas  # Adicionar a lista de temas ao contexto
         })
     else:
         messages.error(request, 'Você precisa fazer login para acessar esta página.')
         return redirect('login_admin')
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -380,3 +313,107 @@ def logout_admin(request):
     # Redireciona para a página de login
     return redirect('home')
 
+    
+
+
+def politica_cookies(request):
+    return render(request, 'politica-cookies.html')
+
+
+
+
+
+#LOGIN PROFESSOR
+
+def login_prof(request):
+    if request.method == 'POST':
+        form = ProfessorLoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            senha = form.cleaned_data['senha']
+            professor = Professor.objects.filter(email=email).first()
+            if professor:
+                if professor.check_password(senha):
+                    if professor.ativo:
+                        request.session['professor_id'] = professor.id
+                        return redirect('pag_prof')
+                    else:
+                        messages.error(request, 'Sua conta está inativa. Por favor, entre em contato com o suporte.')
+                else:
+                    form.add_error('senha', 'Senha incorreta. Por favor, tente novamente.')
+            else:
+                form.add_error('email', 'Não há conta associada a este e-mail.')
+    else:
+        form = ProfessorLoginForm()
+        
+    return render(request, 'login_prof.html', {'form': form})
+
+
+
+
+#PAGINA PROFESSOR
+
+def pag_prof(request):
+    if 'professor_id' in request.session:
+        professor_id = request.session['professor_id']
+        try:
+            professor = Professor.objects.get(id=professor_id)
+            
+            if request.method == 'POST':
+                form = CorrecaoForm(request.POST)
+                if form.is_valid():
+                    correcao = form.save(commit=False)
+                    correcao.id_prof = professor
+                    correcao.id_redacao_id = request.POST.get('id_redacao')
+                    correcao.id_aluno_id = Redacoes.objects.get(id=correcao.id_redacao_id).id_aluno_id
+                    correcao.save()
+                    messages.success(request, 'Correção enviada com sucesso!')
+                    return redirect('pag_prof')
+                else:
+                    messages.error(request, 'Erro ao enviar a correção. Verifique os dados e tente novamente.')
+
+            # Filtrar redações que ainda não foram corrigidas
+            redacoes = Redacoes.objects.filter(correcao__isnull=True)
+            context = {
+                'professor': professor,
+                'redacoes': redacoes,
+                'correcao_form': CorrecaoForm()
+            }
+            return render(request, 'pag_prof.html', context)
+        except Professor.DoesNotExist:
+            messages.error(request, 'Professor não encontrado.')
+            return redirect('login_prof')
+    else:
+        messages.error(request, 'Você precisa fazer login para acessar esta página.')
+        return redirect('login_prof')
+    
+
+
+
+def corrigir_redacao(request, redacao_id):
+    if 'professor_id' not in request.session:
+        messages.error(request, 'Você precisa fazer login para acessar esta página.')
+        return redirect('login_prof')
+
+    professor_id = request.session['professor_id']
+    professor = get_object_or_404(Professor, id=professor_id)
+    redacao = get_object_or_404(Redacoes, id=redacao_id)
+
+    if request.method == 'POST':
+        form = CorrecaoForm(request.POST)
+        if form.is_valid():
+            correcao = form.save(commit=False)
+            correcao.redacao = redacao
+            correcao.professor = professor
+            correcao.save()
+            messages.success(request, 'Redação corrigida com sucesso!')
+            return redirect('pag_prof')
+    else:
+        form = CorrecaoForm()
+
+    context = {
+        'redacao': redacao,
+        'form': form
+    }
+    return render(request, 'corrigir_redacao.html', context)
+    
