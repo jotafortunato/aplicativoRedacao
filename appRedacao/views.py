@@ -373,11 +373,14 @@ def pag_prof(request):
                     messages.error(request, 'Erro ao enviar a correção. Verifique os dados e tente novamente.')
 
             # Filtrar redações que ainda não foram corrigidas
-            redacoes = Redacoes.objects.filter(correcao__isnull=True)
+            redacoes_pendentes = Redacoes.objects.filter(correcao__isnull=True)
+            correcoes_realizadas = Correcao.objects.filter(id_prof=professor)
+
             context = {
                 'professor': professor,
-                'redacoes': redacoes,
-                'correcao_form': CorrecaoForm()
+                'redacoes': redacoes_pendentes,
+                'correcao_form': CorrecaoForm(),
+                'correcoes': correcoes_realizadas  # Passando correções já realizadas para o contexto
             }
             return render(request, 'pag_prof.html', context)
         except Professor.DoesNotExist:
@@ -386,7 +389,6 @@ def pag_prof(request):
     else:
         messages.error(request, 'Você precisa fazer login para acessar esta página.')
         return redirect('login_prof')
-    
 
 
 

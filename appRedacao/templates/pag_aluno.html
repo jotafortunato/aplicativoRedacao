@@ -351,7 +351,8 @@
                         <h5>Correção:</h5>
                         <p class="card-text">Feedback: {{ correcao.feedback }}</p>
                         <p class="card-text">Nota: {{ correcao.nota }}</p>
-                        <p class="text-muted">Corrigida em: {{ correcao.data_correcao }}</p>
+                        <p class="text-muted">Data da correção: {{ correcao.data_correcao }}</p>
+                        <p class="text-muted">Corrigido por: {{ correcao.id_prof.nome }}</p>
                     </div>
                 </div>
             {% endfor %}
@@ -368,20 +369,23 @@
 <!-- Modal -->
 <div class="modal" tabindex="-1" role="dialog" id="redacaoModal">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="redacaoModalLabel">Redação</h5>
-          <!-- Remover o botão "x" -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="redacaoModalLabel">Redação</h5>
+                <!-- Remover o botão "x" -->
+            </div>
+            <div class="modal-body" style="padding: 20px;">
+                <div id="redacaoModalContent">
+                    <!-- Conteúdo do modal aqui -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
         </div>
-        <div class="modal-body">
-          <div id="redacaoModalContent"></div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
+
   
 
 

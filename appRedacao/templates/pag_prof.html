@@ -7,19 +7,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{% static 'assets/img/logocurva.png' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-      <style>
+    <style>
         body, html {
             margin: 0;
             font-family: Arial, sans-serif;
             height: 100%;
             background-color: white;
-            overflow: hidden;
 
         }
-
-
 
         .header {
             display: flex;
@@ -29,6 +27,7 @@
             background-color: #343a40;
             color: white;
             z-index: 1;
+
         }
 
         .header .profile {
@@ -111,6 +110,7 @@
 
         .sidebar {
             width: 250px;
+            height: 500px;
             background-color: rgba(52, 58, 64, 0.8);
             color: white;
             padding: 20px;
@@ -161,6 +161,10 @@
             background-color: purple;
         }
 
+        .logout:hover {
+            background-color: #c82333;
+        }
+
         .content {
             flex-grow: 1;
             padding: 20px;
@@ -194,50 +198,79 @@
             margin-top: 20px;
         }
 
-
-
+        /* Centralização do card de histórico de redações */
+        #historico-redacoes {
+            margin: 50px auto; /* Margem superior e inferior de 50px e centralizado horizontalmente */
+            width: 70%; /* Largura do card de histórico de redações */
+            max-width: 600px; /* Largura máxima do card */
+        }
     </style>
-
-
-
-
 
     <title>Painel do Professor</title>
 </head>
 
 <body>
-    <div class="header">
-        <div class="menu-icon" id="icone_menu">
-            <span></span>
-        </div>
-        <div class="area-estudo">
-            <img src='{% static 'assets/img/logocurva.png' %}' id="logo" alt="Logo">
-            <span>Área do Professor</span>
-        </div>
-    </div>
 
-    
-<div class="content d-flex justify-content-center align-items-center">
-    <div class="container mt-4">
-        <div id="teste" class="row justify-content-center "> <!-- Adicionado align-items-center -->
+<div class="header">
+    <div class="menu-icon" id="icone_menu">
+        <span></span>
+    </div>
+    <div class="area-estudo">
+        <img src='{% static 'assets/img/logocurva.png' %}' id="logo" alt="Logo">
+        <span>Área do Professor</span>
+    </div>
+</div>
+
+<!-- Seção para mostrar as redações já corrigidas -->
+<div id="historico-redacoes" class="card mx-auto mt-4" style="display: none;">
+    <div class="card-body">
+        <h4 class="card-title text-center mb-4">Redações Corrigidas</h4>
+        {% if correcoes %}
+            {% for correcao in correcoes %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Redação Corrigida</h5>
+                        <p class="card-text">Arquivo: <a href="{{ correcao.id_redacao.arquivo_redacao.url }}" target="_blank">Visualizar Arquivo</a></p>
+                        <p class="text-muted">Enviada em: {{ correcao.id_redacao.data_envio }}</p>
+                        <hr>
+                        <h5>Correção:</h5>
+                        <p class="card-text mb-1">Feedback: {{ correcao.feedback }}</p>
+                        <p class="card-text mb-1">Nota: {{ correcao.nota }}</p>
+                        <p class="text-muted">Corrigida em: {{ correcao.data_correcao }}</p>
+                        <p class="text-muted">Aluno : {{ correcao.id_aluno.nome_aluno }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info" role="alert">
+                Não há redações corrigidas por você.
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+
+
+    <div class="container">
+        <div class="row justify-content-center">
             <div class="col-md-6">
-                <div class="card" id="redacoes-lista" style="display: none;">
+                <div class="card mx-auto" id="redacoes-lista" style="display: none;">
                     <div class="card-body">
                         <h4 class="card-title text-center mb-4">Redações para Correção</h4>
                         <ul class="list-group list-group-flush">
                             {% for redacao in redacoes %}
                                 <li class="list-group-item">
-                                    <p>Tema: {{ redacao.tema_redacao.tema_redacao }}</p>
-                                    <a href="{{ redacao.arquivo_redacao.url }}" target="_blank" class="btn btn-primary">Visualizar PDF</a>
-                                    <button class="btn btn-primary ml-2" onclick="showCorrecaoForm({{ redacao.id }})">Corrigir</button>
+                                    <p class="text-muted">Tema: {{ redacao.tema_redacao.tema_redacao }}</p>
+                                    <p class="text-muted">Aluno : {{ redacao.id_aluno.nome_aluno }}</p>
+                                    <a href="{{ redacao.arquivo_redacao.url }}" target="_blank" class="btn btn-secondary">Visualizar PDF</a>
+                                    <button class="btn btn-secondary ml-2" onclick="showCorrecaoForm({{ redacao.id }})">Corrigir</button>
                                 </li>
                             {% endfor %}
                         </ul>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card" id="correcao-form" style="display: none;">
+    
+                <div class="card mx-auto" id="correcao-form" style="display: none;">
                     <div class="card-body">
                         <h4 class="card-title text-center mb-4">Formulário de Correção</h4>
                         <form id="form-correcao" method="post" action="" class="needs-validation" novalidate>
@@ -253,11 +286,14 @@
                                 <div class="invalid-feedback"> </div>
                             </div>
                             <input type="hidden" name="id_redacao" id="id_redacao">
-                            <button id="enviar-correcao" type="submit" class="btn btn-primary btn-block">
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
-                                Enviar Correção
-                            </button>
-                            <a href="{% url 'pag_prof' %}" class="btn btn-secondary btn-block mt-3">Início</a>
+                        </br>
+                            <div class="d-grid gap-2">
+                                <button id="enviar-correcao" type="submit" class="btn btn-success">
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
+                                    Enviar Correção
+                                </button>
+                                <a href="#" class="btn btn-secondary mt-3" onclick="voltarParaRedacoes()">Voltar para Redações</a>
+                            </div>
                         </form>
                         <div id="sucesso" style="display: none; text-align: center;">
                             <div class="alert alert-success" role="alert">
@@ -269,27 +305,16 @@
             </div>
         </div>
     </div>
-</div>
+
+    
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-    <div style="display: flex; height: 100%;">
+    <div style="display: flex; justify-content: center;">
         <div class="sidebar" id="sidebar">
             <div class="profile">
                 <img src="{% static 'assets/img/icone_avatar2.png' %}" alt="Foto do Professor" width="50px" height="50px">
-
                 <span>{{ professor.nome }}</span>
             </div>
             <br><br>
@@ -298,72 +323,19 @@
             <a href="#" id="configuracoes">Configurações</a>
             <a href="{% url 'logout_aluno' %}" class="logout" style="text-decoration: none;">Logout</a>
         </div>
-
     </div>
-
-
-
-
-
-<!-- Script para mostrar redações e formulario de correção -->
-
-<script>
-        let redacoesListVisible = false;
-
-function toggleRedacoes() {
-    redacoesListVisible = !redacoesListVisible;
-    document.getElementById('redacoes-lista').style.display = redacoesListVisible ? 'block' : 'none';
-    document.getElementById('correcao-form').style.display = 'none';
-}
-
-function showCorrecaoForm(redacaoId) {
-    document.getElementById('id_redacao').value = redacaoId;
-    document.getElementById('redacoes-lista').style.display = 'none';
-    document.getElementById('correcao-form').style.display = 'block';
-}
-
-
-
-
-
-
-
-
-document.getElementById('form-correcao').addEventListener('submit', function(event) {
-    event.preventDefault(); // Impede o envio padrão do formulário
-
-    // Mostra o indicador de envio
-    var spinner = document.getElementById('enviar-correcao').querySelector('.spinner-border');
-    spinner.style.display = 'inline-block';
-
-    // Simula um atraso de 2 segundos (você pode substituir isso por uma chamada AJAX real)
-    setTimeout(function() {
-        // Oculta o indicador de envio
-        spinner.style.display = 'none';
-
-        // Mostra o aviso de sucesso
-        document.getElementById('sucesso').style.display = 'block';
-
-        // Submete o formulário
-        document.getElementById('form-correcao').submit();
-    }, 4000); // 2 segundos de atraso
-});
-</script>
-        
-
-
-
+    
     <script>
         document.getElementById('icone_menu').addEventListener('click', function() {
             var sidebar = document.getElementById('sidebar');
             var menuIcon = document.getElementById('icone_menu');
-
+    
             if (sidebar.style.display === 'none' || sidebar.style.display === '') {
                 sidebar.style.display = 'flex';
                 setTimeout(function() {
                     sidebar.classList.add('open');
                 }, 10); // Pequeno atraso para permitir a transição
-
+    
                 // Girar o ícone do menu
                 menuIcon.classList.add('rotate-icon');
             } else {
@@ -371,16 +343,61 @@ document.getElementById('form-correcao').addEventListener('submit', function(eve
                 setTimeout(function() {
                     sidebar.style.display = 'none';
                 }, 300); // Aguarda a transição terminar antes de ocultar
-
+    
                 // Resetar a rotação do ícone do menu
                 menuIcon.classList.remove('rotate-icon');
             }
         });
+    
+        let redacoesListVisible = false;
+    
+        function toggleRedacoes() {
+            redacoesListVisible = !redacoesListVisible;
+            document.getElementById('redacoes-lista').style.display = redacoesListVisible ? 'block' : 'none';
+            document.getElementById('correcao-form').style.display = 'none';
+        }
+    
+        function showCorrecaoForm(redacaoId) {
+            document.getElementById('id_redacao').value = redacaoId;
+            document.getElementById('redacoes-lista').style.display = 'none';
+            document.getElementById('correcao-form').style.display = 'block';
+        }
+    
+        function voltarParaRedacoes() {
+            document.getElementById('redacoes-lista').style.display = 'block';
+            document.getElementById('correcao-form').style.display = 'none';
+        }
+    
+        document.addEventListener("DOMContentLoaded", function() {
+            // Escuta o clique no link "Histórico de Redação"
+            document.getElementById('historico-redacao').addEventListener('click', function(event) {
+                event.preventDefault();
+                var historicoRedacoes = document.getElementById('historico-redacoes');
+                // Alterna a visibilidade da div ao clicar no link
+                historicoRedacoes.style.display = (historicoRedacoes.style.display === 'block') ? 'none' : 'block';
+            });
+        });
+    
+        document.getElementById('form-correcao').addEventListener('submit', function(event) {
+            event.preventDefault(); // Impede o envio padrão do formulário
+    
+            // Mostra o indicador de envio
+            var spinner = document.getElementById('enviar-correcao').querySelector('.spinner-border');
+            spinner.style.display = 'inline-block';
+    
+            // Simula um atraso de 4 segundos (você pode substituir isso por uma chamada AJAX real)
+            setTimeout(function() {
+                // Oculta o indicador de envio
+                spinner.style.display = 'none';
+    
+                // Mostra o aviso de sucesso
+                document.getElementById('sucesso').style.display = 'block';
+    
+                // Submete o formulário
+                document.getElementById('form-correcao').submit();
+            }, 4000); // 4 segundos de atraso
+        });
     </script>
-
-
-
-
-
-</body>
-</html>
+    
+    </body>
+    </html>

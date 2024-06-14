@@ -77,7 +77,7 @@ class TemaRedacao(models.Model):
     tema_redacao = models.CharField(max_length=300)
 
     def __str__(self):
-        return self.tema
+        return self.tema_redacao
     
     class Meta:
         verbose_name_plural = "TemaRedacao"
